@@ -7,6 +7,10 @@
  */
 
 buildscript {
+    ext {
+        kotlin_version = '1.4.31'
+    }
+
 
     /**
      * The repositories block configures the repositories Gradle uses to
@@ -29,6 +33,7 @@ buildscript {
 
     dependencies {
         classpath 'com.android.tools.build:gradle:4.0.0'
+        classpath "org.jetbrains.kotlin:kotlin-gradle-plugin:$kotlin_version"
     }
 }
 

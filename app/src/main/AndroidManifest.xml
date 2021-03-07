@@ -18,35 +18,46 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 -->
+<manifest xmlns:android="http://schemas.android.com/apk/res/android"
+    package="com.osfans.trime">
 
-<manifest xmlns:android="http://schemas.android.com/apk/res/android" 
-        package="com.osfans.trime" >
     <uses-permission android:name="android.permission.RECEIVE_BOOT_COMPLETED" />
-    <uses-permission android:name="android.permission.VIBRATE"/>
-    <uses-permission android:name="android.permission.READ_EXTERNAL_STORAGE"/>
-    <uses-permission android:name="android.permission.WRITE_EXTERNAL_STORAGE"/>
-    <uses-permission android:name="android.permission.WRITE_MEDIA_STORAGE"/>
+    <uses-permission android:name="android.permission.VIBRATE" />
+    <uses-permission android:name="android.permission.READ_EXTERNAL_STORAGE" />
+    <uses-permission android:name="android.permission.WRITE_EXTERNAL_STORAGE" />
+    <uses-permission android:name="android.permission.WRITE_MEDIA_STORAGE" />
     <uses-permission android:name="android.permission.RECORD_AUDIO" />
     <uses-permission android:name="android.permission.SYSTEM_ALERT_WINDOW" />
-    <application android:label="@string/ime_name"
-                 android:icon="@drawable/icon"
-                 android:requestLegacyExternalStorage="true"
-                 android:allowBackup="false" >
 
-        <service android:name="Trime" android:label="@string/ime_name"
-                android:permission="android.permission.BIND_INPUT_METHOD">
+    <application
+        android:allowBackup="false"
+        android:icon="@drawable/icon"
+        android:label="@string/ime_name"
+        android:requestLegacyExternalStorage="true">
+
+        <service
+            android:name=".Trime"
+            android:label="@string/ime_name"
+            android:permission="android.permission.BIND_INPUT_METHOD">
             <intent-filter>
                 <action android:name="android.view.InputMethod" />
             </intent-filter>
-            <meta-data android:name="android.view.im" android:resource="@xml/method" />
+
+            <meta-data
+                android:name="android.view.im"
+                android:resource="@xml/method" />
         </service>
 
-        <activity android:name="Pref" android:label="@string/ime_name">
+        <activity
+            android:name=".Pref"
+            android:label="@string/ime_name">
             <intent-filter>
-                <action android:name="android.intent.action.MAIN"/>
+                <action android:name="android.intent.action.MAIN" />
+
                 <category android:name="android.intent.category.DEFAULT" />
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
         </activity>
     </application>
+
 </manifest>

@@ -334,7 +334,7 @@ public class Trime extends InputMethodService
   }
 
   public void invalidate() {
-    Rime.get(this);
+    Rime.get(this, false);
     if (mConfig != null) mConfig.destroy();
     mConfig = new Config(this);
     reset();
@@ -506,7 +506,9 @@ public class Trime extends InputMethodService
     mFloatingWindow = new PopupWindow(mCompositionContainer);
     mFloatingWindow.setClippingEnabled(false);
     mFloatingWindow.setInputMethodMode(PopupWindow.INPUT_METHOD_NOT_NEEDED);
-    mFloatingWindow.setWindowLayoutType(getDialogType());
+    if (VERSION.SDK_INT >= VERSION_CODES.M) {
+      mFloatingWindow.setWindowLayoutType(getDialogType());
+    }
     mComposition = (Composition) mCompositionContainer.getChildAt(0);
 
     mCandidateContainer =
@@ -563,7 +565,7 @@ public class Trime extends InputMethodService
         if (canCompose) break;
         return;
     }
-    Rime.get(this);
+    Rime.get(this,false);
     if (reset_ascii_mode) mAsciiMode = false;
     // Select a keyboard based on the input type of the editing field.
     mKeyboardSwitch.init(getMaxWidth()); //橫豎屏切換時重置鍵盤
@@ -1002,6 +1004,7 @@ public class Trime extends InputMethodService
         t = m.matches() ? m.group(1) : s.substring(0, 1);
         onEvent(new Event(t));
       }
+      assert t != null;
       s = s.substring(t.length());
     }
     keyUpNeeded = false;
@@ -1136,6 +1139,7 @@ public class Trime extends InputMethodService
   /** 彈出{@link ColorDialog 配色對話框} */
   private void showColorDialog() {
     AlertDialog dialog = new ColorDialog(this).getDialog();
+    assert dialog != null;
     showDialog(dialog);
   }
 
@@ -1144,9 +1148,9 @@ public class Trime extends InputMethodService
     new SchemaDialog(this, mCandidateContainer.getWindowToken());
   }
 
-  /** 彈出{@link ThemeDlg 配色對話框} */
+  /** 彈出{@link ThemeDialog 配色對話框} */
   private void showThemeDialog() {
-    new ThemeDlg(this, mCandidateContainer.getWindowToken());
+    new ThemeDialog(this, mCandidateContainer.getWindowToken());
   }
 
   private boolean handleOption(int keyCode) {

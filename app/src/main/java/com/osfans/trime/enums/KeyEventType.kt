@@ -1,6 +1,4 @@
-<?xml version="1.0" encoding="utf-8"?>
-<!--
-/**
+/*
  * Copyright (C) 2015-present, osfans
  * waxaca@163.com https://github.com/osfans
  *
@@ -17,20 +15,9 @@
  * You should have received a copy of the GNU General Public License
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
--->
+package com.osfans.trime.enums
 
-<resources xmlns:xliff="urn:oasis:names:en:xliff:document:1.2">
-    <string name="pref_trime_qq_summary">811142286</string>
-    <string name="pref_trime_qq2_summary">458845988</string>
-    <string name="pref_rime_qq_summary">77608640</string>
-    <string name="pref_licensing_summary">GPLv3</string>
-    <string-array name="inline_values">
-        <item>preview</item>
-        <item>composition</item>
-        <item>input</item>
-        <item>none</item>
-    </string-array>
-
-    <string name="default_shared_data_dir">/sdcard/Documents/RIME</string>
-    <string name="default_user_data_dir">/sdcard/Documents/RIME</string>
-</resources>
+/** 按键事件枚举  */
+enum class KeyEventType {
+    CLICK, LONG_CLICK, SWIPE_LEFT, SWIPE_RIGHT, SWIPE_UP, SWIPE_DOWN, COMBO
+}

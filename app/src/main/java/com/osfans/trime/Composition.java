@@ -36,12 +36,14 @@ import android.text.style.UnderlineSpan;
 import android.util.AttributeSet;
 import android.view.MotionEvent;
 import android.view.View;
-import android.widget.TextView;
+
+import androidx.appcompat.widget.AppCompatTextView;
+
 import java.util.List;
 import java.util.Map;
 
 /** 編碼區，顯示已輸入的按鍵編碼，可使用方向鍵或觸屏移動光標位置 */
-public class Composition extends TextView {
+public class Composition extends AppCompatTextView {
   private int key_text_size, text_size, label_text_size, candidate_text_size, comment_text_size;
   private int key_text_color, text_color, label_color, candidate_text_color, comment_text_color;
   private int hilited_text_color, hilited_candidate_text_color, hilited_comment_text_color;
