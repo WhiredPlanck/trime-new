@@ -1,0 +1,104 @@
+package com.osfans.trime.PrefUI
+
+import android.app.ProgressDialog
+import android.os.Bundle
+import android.util.Log
+import androidx.appcompat.app.AppCompatActivity
+import androidx.preference.Preference
+import androidx.preference.PreferenceFragmentCompat
+import com.osfans.trime.R
+import com.osfans.trime.Utils.Function
+import kotlin.system.exitProcess
+
+private const val TITLE_TAG = "settingsActivityTitle"
+
+class PrefActivity : AppCompatActivity(),
+        PreferenceFragmentCompat.OnPreferenceStartFragmentCallback {
+
+    override fun onCreate(savedInstanceState: Bundle?) {
+        super.onCreate(savedInstanceState)
+        setContentView(R.layout.pref_activity)
+        if (savedInstanceState == null) {
+            supportFragmentManager
+                    .beginTransaction()
+                    .replace(R.id.settings, HeaderFragment())
+                    .commit()
+        } else {
+            title = savedInstanceState.getCharSequence(TITLE_TAG)
+        }
+        supportFragmentManager.addOnBackStackChangedListener {
+            if (supportFragmentManager.backStackEntryCount == 0) {
+                setTitle(R.string.ime_name)
+            }
+        }
+        supportActionBar?.setDisplayHomeAsUpEnabled(true)
+    }
+
+    override fun onSaveInstanceState(outState: Bundle) {
+        super.onSaveInstanceState(outState)
+        // Save current activity title so we can set it again after a configuration change
+        outState.putCharSequence(TITLE_TAG, title)
+    }
+
+    override fun onSupportNavigateUp(): Boolean {
+        if (supportFragmentManager.popBackStackImmediate()) {
+            return true
+        } else if (supportFragmentManager.backStackEntryCount == 0) {
+            finish()
+            return true
+        }
+        return super.onSupportNavigateUp()
+    }
+
+    override fun onPreferenceStartFragment(
+            caller: PreferenceFragmentCompat,
+            pref: Preference
+    ): Boolean {
+        // Instantiate the new Fragment
+        val args = pref.extras
+        val fragment = supportFragmentManager.fragmentFactory.instantiate(
+                classLoader,
+                pref.fragment
+        ).apply {
+            arguments = args
+            setTargetFragment(caller, 0)
+        }
+        // Replace the existing Fragment with the new Fragment
+        supportFragmentManager.beginTransaction()
+                .replace(R.id.settings, fragment)
+                .addToBackStack(null)
+                .commit()
+        title = pref.title
+        return true
+    }
+
+    class HeaderFragment : PreferenceFragmentCompat() {
+        override fun onCreatePreferences(savedInstanceState: Bundle?, rootKey: String?) {
+            setPreferencesFromResource(R.xml.prefs, rootKey)
+        }
+
+        override fun onPreferenceTreeClick(preference: Preference?): Boolean {
+            return when (preference?.key) {
+                "pref_deploy" -> {
+                    val mProgressDialog = ProgressDialog(context)
+                    mProgressDialog.setMessage(getString(R.string.deploy_progress))
+                    mProgressDialog.show()
+                    Thread {
+                        Runnable {
+                            try {
+                                Function.deploy(context)
+                            } catch (ex: Exception) {
+                                Log.e(TITLE_TAG, "Deploy Exception: $ex")
+                            } finally {
+                                mProgressDialog.dismiss()
+                                exitProcess(0) //清理內存
+                            }
+                        }.run()
+                    }.start()
+                    true
+                }
+                else -> super.onPreferenceTreeClick(preference)
+            }
+        }
+    }
+}
