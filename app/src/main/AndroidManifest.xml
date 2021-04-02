@@ -33,7 +33,7 @@
                  android:requestLegacyExternalStorage="true"
                  android:allowBackup="false" >
 
-        <service android:name="Trime" android:label="@string/ime_name"
+        <service android:name=".ime.Trime" android:label="@string/ime_name"
                 android:permission="android.permission.BIND_INPUT_METHOD">
             <intent-filter>
                 <action android:name="android.view.InputMethod" />
@@ -41,7 +41,7 @@
             <meta-data android:name="android.view.im" android:resource="@xml/method" />
         </service>
 
-        <activity android:name="Pref" android:label="@string/ime_name">
+        <activity android:name=".PrefUI.Pref" android:label="@string/ime_name">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN"/>
                 <category android:name="android.intent.category.DEFAULT" />

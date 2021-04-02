@@ -16,7 +16,7 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-package com.osfans.trime;
+package com.osfans.trime.ime;
 
 import android.content.Context;
 import android.content.res.ColorStateList;
@@ -43,6 +43,10 @@ import android.view.ViewConfiguration;
 import android.view.ViewGroup;
 import android.widget.PopupWindow;
 import android.widget.TextView;
+
+import com.osfans.trime.R;
+import com.osfans.trime.Utils.Config;
+import com.osfans.trime.Utils.Function;
 import com.osfans.trime.enums.KeyEventType;
 import java.lang.ref.WeakReference;
 import java.lang.reflect.Method;

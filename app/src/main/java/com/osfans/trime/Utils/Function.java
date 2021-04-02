@@ -16,7 +16,7 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-package com.osfans.trime;
+package com.osfans.trime.Utils;
 
 import android.annotation.TargetApi;
 import android.app.SearchManager;
@@ -34,6 +34,10 @@ import android.preference.PreferenceManager;
 import android.util.Log;
 import android.util.SparseArray;
 import android.view.KeyEvent;
+
+import com.osfans.trime.PrefUI.Pref;
+import com.osfans.trime.ime.Rime;
+
 import java.text.FieldPosition;
 import java.text.SimpleDateFormat;
 import java.util.Date;
@@ -41,7 +45,7 @@ import java.util.List;
 import java.util.Locale;
 
 /** 實現打開指定程序、打開{@link Pref 輸入法全局設置}對話框等功能 */
-class Function {
+public class Function {
   private static String TAG = Function.class.getSimpleName();
   private static SparseArray<String> sApplicationLaunchKeyCategories;
 

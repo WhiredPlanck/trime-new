@@ -16,7 +16,7 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-package com.osfans.trime;
+package com.osfans.trime.ime;
 
 import android.content.Context;
 import android.graphics.Canvas;
@@ -29,6 +29,9 @@ import android.util.AttributeSet;
 import android.view.MotionEvent;
 import android.view.View;
 import android.view.ViewGroup.LayoutParams;
+
+import com.osfans.trime.Utils.Config;
+import com.osfans.trime.Utils.Function;
 
 /** 顯示候選字詞 */
 public class Candidate extends View {

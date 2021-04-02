@@ -16,7 +16,7 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-package com.osfans.trime;
+package com.osfans.trime.ime;
 
 import android.annotation.TargetApi;
 import android.content.Context;
@@ -37,6 +37,10 @@ import android.util.AttributeSet;
 import android.view.MotionEvent;
 import android.view.View;
 import android.widget.TextView;
+
+import com.osfans.trime.Utils.Config;
+import com.osfans.trime.Utils.Function;
+
 import java.util.List;
 import java.util.Map;
 

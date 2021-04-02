@@ -16,7 +16,7 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-package com.osfans.trime;
+package com.osfans.trime.PrefUI;
 
 import android.Manifest;
 import android.annotation.TargetApi;
@@ -42,6 +42,16 @@ import android.view.inputmethod.InputMethodInfo;
 import android.view.inputmethod.InputMethodManager;
 import android.webkit.WebView;
 import android.webkit.WebViewClient;
+
+import com.osfans.trime.Utils.Config;
+import com.osfans.trime.Utils.Function;
+import com.osfans.trime.R;
+import com.osfans.trime.ime.Rime;
+import com.osfans.trime.ime.Trime;
+import com.osfans.trime.PrefUI.dialog.ColorDialog;
+import com.osfans.trime.PrefUI.dialog.ResetDialog;
+import com.osfans.trime.PrefUI.dialog.SchemaDialog;
+import com.osfans.trime.PrefUI.dialog.ThemeDlg;
 
 import org.ocpsoft.prettytime.PrettyTime;
 

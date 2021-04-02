@@ -16,7 +16,7 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-package com.osfans.trime;
+package com.osfans.trime.ime;
 
 import android.content.Context;
 import android.content.SharedPreferences;
@@ -27,6 +27,8 @@ import android.view.KeyEvent;
 import java.util.Locale;
 import android.os.VibrationEffect;
 import android.os.Build;
+
+import com.osfans.trime.Utils.Function;
 
 /** 處理按鍵聲音、震動、朗讀等效果 */
 class Effect {

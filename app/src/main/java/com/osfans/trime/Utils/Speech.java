@@ -16,7 +16,7 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-package com.osfans.trime;
+package com.osfans.trime.Utils;
 
 import android.content.Context;
 import android.content.Intent;
@@ -26,10 +26,14 @@ import android.speech.RecognizerIntent;
 import android.speech.SpeechRecognizer;
 import android.util.Log;
 import android.widget.Toast;
+
+import com.osfans.trime.ime.Rime;
+import com.osfans.trime.ime.Trime;
+
 import java.util.ArrayList;
 
 /** {@link RecognitionListener 語音輸入} */
-class Speech implements RecognitionListener {
+public class Speech implements RecognitionListener {
   private SpeechRecognizer speech = null;
   private Intent recognizerIntent;
   private String TAG = "Speech";

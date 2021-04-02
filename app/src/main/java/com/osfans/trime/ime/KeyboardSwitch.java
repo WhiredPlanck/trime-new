@@ -16,9 +16,13 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-package com.osfans.trime;
+package com.osfans.trime.ime;
 
 import android.content.Context;
+
+import com.osfans.trime.Utils.Config;
+import com.osfans.trime.Utils.Function;
+
 import java.util.List;
 
 /** 管理多個{@link Keyboard 鍵盤} */

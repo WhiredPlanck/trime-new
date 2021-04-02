@@ -16,7 +16,7 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-package com.osfans.trime;
+package com.osfans.trime.ime;
 
 import android.app.AlertDialog;
 import android.app.Dialog;
@@ -47,8 +47,18 @@ import android.view.inputmethod.InputMethodManager;
 import android.widget.FrameLayout;
 import android.widget.LinearLayout;
 import android.widget.PopupWindow;
+
+import com.osfans.trime.R;
+import com.osfans.trime.Utils.Config;
+import com.osfans.trime.Utils.Function;
+import com.osfans.trime.Utils.IntentReceiver;
+import com.osfans.trime.Utils.Speech;
 import com.osfans.trime.enums.InlineModeType;
 import com.osfans.trime.enums.WindowsPositionType;
+import com.osfans.trime.PrefUI.dialog.ColorDialog;
+import com.osfans.trime.PrefUI.dialog.SchemaDialog;
+import com.osfans.trime.PrefUI.dialog.ThemeDlg;
+
 import java.util.Locale;
 import java.util.logging.Logger;
 import java.util.regex.Matcher;
