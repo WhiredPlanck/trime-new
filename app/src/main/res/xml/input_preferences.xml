@@ -1,6 +1,16 @@
-<PreferenceScreen xmlns:app="http://schemas.android.com/apk/res-auto">
+<PreferenceScreen xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    android:key="pref_input"
+    android:title="@string/pref_input">
 
-    <SwitchPreferenceCompat
+    <EditTextPreference android:key="shared_data_dir" android:title="@string/shared_data_dir" android:defaultValue="@string/default_shared_data_dir" />
+    <EditTextPreference android:key="user_data_dir" android:title="@string/user_data_dir" android:defaultValue="@string/default_user_data_dir"/>
+    <Preference android:key="pref_schemas" android:title="@string/pref_schemas" android:summary="@string/pref_schemas_summary"/>
+    <Preference android:key="pref_sync" android:title="@string/pref_sync" android:summary="@string/pref_sync_summary"/>
+    <SwitchPreference android:key="pref_sync_bg" android:title="@string/pref_sync_bg" android:summary="@string/pref_sync_bg_tip" android:persistent="true" />
+    <Preference android:key="pref_reset" android:title="@string/pref_reset" android:summary="@string/pref_reset_summary"/>
+
+    <!-- <SwitchPreferenceCompat
         app:key="sync"
         app:title="@string/sync_title" />
 
@@ -9,6 +19,6 @@
         app:key="attachment"
         app:summaryOff="@string/attachment_summary_off"
         app:summaryOn="@string/attachment_summary_on"
-        app:title="@string/attachment_title" />
+        app:title="@string/attachment_title" /> -->
 
 </PreferenceScreen>

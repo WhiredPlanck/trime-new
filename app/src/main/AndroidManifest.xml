@@ -1,52 +1,49 @@
 <?xml version="1.0" encoding="utf-8"?>
-<!--
-/**
- * Copyright (C) 2015-present, osfans
- * waxaca@163.com https://github.com/osfans
- *
- * This program is free software: you can redistribute it and/or modify
- * it under the terms of the GNU General Public License as published by
- * the Free Software Foundation, either version 3 of the License, or
- * (at your option) any later version.
- *
- * This program is distributed in the hope that it will be useful,
- * but WITHOUT ANY WARRANTY; without even the implied warranty of
- * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
- * GNU General Public License for more details.
- *
- * You should have received a copy of the GNU General Public License
- * along with this program.  If not, see <http://www.gnu.org/licenses/>.
- */
--->
+<manifest xmlns:android="http://schemas.android.com/apk/res/android"
+    package="com.osfans.trime">
 
-<manifest xmlns:android="http://schemas.android.com/apk/res/android" 
-        package="com.osfans.trime" >
     <uses-permission android:name="android.permission.RECEIVE_BOOT_COMPLETED" />
-    <uses-permission android:name="android.permission.VIBRATE"/>
-    <uses-permission android:name="android.permission.READ_EXTERNAL_STORAGE"/>
-    <uses-permission android:name="android.permission.WRITE_EXTERNAL_STORAGE"/>
-    <uses-permission android:name="android.permission.WRITE_MEDIA_STORAGE"/>
+    <uses-permission android:name="android.permission.VIBRATE" />
+    <uses-permission android:name="android.permission.READ_EXTERNAL_STORAGE" />
+    <uses-permission android:name="android.permission.WRITE_EXTERNAL_STORAGE" />
+    <uses-permission android:name="android.permission.WRITE_MEDIA_STORAGE" />
     <uses-permission android:name="android.permission.RECORD_AUDIO" />
     <uses-permission android:name="android.permission.SYSTEM_ALERT_WINDOW" />
-    <application android:label="@string/ime_name"
-                 android:icon="@drawable/icon"
-                 android:requestLegacyExternalStorage="true"
-                 android:allowBackup="false" >
 
-        <service android:name=".ime.Trime" android:label="@string/ime_name"
-                android:permission="android.permission.BIND_INPUT_METHOD">
+    <application
+        android:name=".Utils.GlobalInfo"
+        android:allowBackup="false"
+        android:icon="@drawable/icon"
+        android:label="@string/ime_name"
+        android:requestLegacyExternalStorage="true"
+        android:theme="@style/Theme.AppCompat.DayNight">
+        <!-- <activity
+            android:name=".PrefUI.PrefActivity"
+            android:label="@string/title_activity_pref"></activity> -->
+
+        <service
+            android:name=".ime.Trime"
+            android:label="@string/ime_name"
+            android:permission="android.permission.BIND_INPUT_METHOD">
             <intent-filter>
                 <action android:name="android.view.InputMethod" />
             </intent-filter>
-            <meta-data android:name="android.view.im" android:resource="@xml/method" />
+
+            <meta-data
+                android:name="android.view.im"
+                android:resource="@xml/method" />
         </service>
 
-        <activity android:name=".PrefUI.Pref" android:label="@string/ime_name">
+        <activity
+            android:name=".PrefUI.PrefActivity"
+            android:label="@string/ime_name">
             <intent-filter>
-                <action android:name="android.intent.action.MAIN"/>
+                <action android:name="android.intent.action.MAIN" />
+
                 <category android:name="android.intent.category.DEFAULT" />
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
         </activity>
     </application>
+
 </manifest>
