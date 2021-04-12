@@ -100,4 +100,7 @@
     <string name="pref_sync_bg_failure">上次同步于 %s，失败</string>
     <string name="pref_sync_bg_never">后台同步未运行</string>
     <string name="pref_sync_bg_tip">点击以开启后台同步</string>
+    <string name="category_pref_keyboard_appearance">键盘外观</string>
+    <string name="category_pref_keyboard_functions">键盘功能</string>
+    <string name="category_pref_keyboard_effects">键盘效果</string>
 </resources>
