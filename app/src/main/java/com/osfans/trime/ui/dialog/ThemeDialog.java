@@ -16,7 +16,7 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-package com.osfans.trime.PrefUI.dialog;
+package com.osfans.trime.ui.dialog;
 
 import android.app.AlertDialog;
 import android.app.ProgressDialog;
@@ -36,7 +36,7 @@ import java.util.HashMap;
 import java.util.Map;
 
 /** 顯示配色方案列表 */
-public class ThemeDlg extends AsyncTask {
+public class ThemeDialog extends AsyncTask {
   private String[] keys;
   private String[] names;
   private int checked;
@@ -64,11 +64,11 @@ public class ThemeDlg extends AsyncTask {
     }
   }
 
-  public ThemeDlg(Context context) {
+  public ThemeDialog(Context context) {
     this(context, null);
   }
 
-  public ThemeDlg(Context context, IBinder token) {
+  public ThemeDialog(Context context, IBinder token) {
     mContext = context;
     mToken = token;
     Config config = Config.get(context);

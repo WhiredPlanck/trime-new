@@ -55,9 +55,9 @@ import com.osfans.trime.Utils.IntentReceiver;
 import com.osfans.trime.Utils.Speech;
 import com.osfans.trime.enums.InlineModeType;
 import com.osfans.trime.enums.WindowsPositionType;
-import com.osfans.trime.PrefUI.dialog.ColorDialog;
-import com.osfans.trime.PrefUI.dialog.SchemaDialog;
-import com.osfans.trime.PrefUI.dialog.ThemeDlg;
+import com.osfans.trime.ui.dialog.ColorDialog;
+import com.osfans.trime.ui.dialog.SchemaDialog;
+import com.osfans.trime.ui.dialog.ThemeDialog;
 
 import java.util.Locale;
 import java.util.logging.Logger;
@@ -1154,9 +1154,9 @@ public class Trime extends InputMethodService
     new SchemaDialog(this, mCandidateContainer.getWindowToken());
   }
 
-  /** 彈出{@link ThemeDlg 配色對話框} */
+  /** 彈出{@link ThemeDialog 配色對話框} */
   private void showThemeDialog() {
-    new ThemeDlg(this, mCandidateContainer.getWindowToken());
+    new ThemeDialog(this, mCandidateContainer.getWindowToken());
   }
 
   private boolean handleOption(int keyCode) {

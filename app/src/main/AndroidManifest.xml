@@ -16,7 +16,7 @@
         android:icon="@drawable/icon"
         android:label="@string/ime_name"
         android:requestLegacyExternalStorage="true"
-        android:theme="@style/Theme.AppCompat.DayNight">
+        android:theme="@style/Theme.AppCompat.DayNight.DarkActionBar">
         <!-- <activity
             android:name=".PrefUI.PrefActivity"
             android:label="@string/title_activity_pref"></activity> -->
@@ -35,7 +35,7 @@
         </service>
 
         <activity
-            android:name=".PrefUI.PrefActivity"
+            android:name=".ui.PrefActivity"
             android:label="@string/ime_name">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />

@@ -1,8 +1,12 @@
-package com.osfans.trime.PrefUI
+@file:Suppress("DEPRECATION")
+
+package com.osfans.trime.ui
 
 import android.app.ProgressDialog
 import android.os.Bundle
 import android.util.Log
+import android.view.Menu
+import android.view.MenuItem
 import androidx.appcompat.app.AppCompatActivity
 import androidx.preference.Preference
 import androidx.preference.PreferenceFragmentCompat
@@ -10,7 +14,7 @@ import com.osfans.trime.R
 import com.osfans.trime.Utils.Function
 import kotlin.system.exitProcess
 
-private const val TITLE_TAG = "settingsActivityTitle"
+private val TITLE_TAG = PrefActivity::class.java.simpleName
 
 class PrefActivity : AppCompatActivity(),
         PreferenceFragmentCompat.OnPreferenceStartFragmentCallback {
@@ -76,7 +80,7 @@ class PrefActivity : AppCompatActivity(),
         override fun onCreatePreferences(savedInstanceState: Bundle?, rootKey: String?) {
             setPreferencesFromResource(R.xml.prefs, rootKey)
         }
-
+        /*
         override fun onPreferenceTreeClick(preference: Preference?): Boolean {
             return when (preference?.key) {
                 "pref_deploy" -> {
@@ -99,6 +103,36 @@ class PrefActivity : AppCompatActivity(),
                 }
                 else -> super.onPreferenceTreeClick(preference)
             }
+        }*/
+    }
+
+    override fun onCreateOptionsMenu(menu: Menu?): Boolean {
+        val inflater = menuInflater
+        inflater.inflate(R.menu.pref_option_menu, menu)
+        return super.onCreateOptionsMenu(menu)
+    }
+
+    override fun onOptionsItemSelected(item: MenuItem): Boolean {
+        return when (item.itemId) {
+            R.id.option_menu_deploy -> {
+                val mProgressDialog = ProgressDialog(this)
+                mProgressDialog.setMessage(getString(R.string.deploy_progress))
+                mProgressDialog.show()
+                Thread {
+                    Runnable {
+                        try {
+                            Function.deploy(this)
+                        } catch (ex: Exception) {
+                            Log.e(TITLE_TAG, "Deploy Exception: $ex")
+                        } finally {
+                            mProgressDialog.dismiss()
+                            exitProcess(0) //清理內存
+                        }
+                    }.run()
+                }.start()
+                true
+            }
+            else -> super.onOptionsItemSelected(item)
         }
     }
 }

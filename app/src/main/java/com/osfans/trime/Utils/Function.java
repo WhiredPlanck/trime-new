@@ -35,7 +35,7 @@ import android.util.Log;
 import android.util.SparseArray;
 import android.view.KeyEvent;
 
-import com.osfans.trime.PrefUI.Pref;
+import com.osfans.trime.ui.Pref;
 import com.osfans.trime.ime.Rime;
 
 import java.text.FieldPosition;

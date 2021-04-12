@@ -16,44 +16,50 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-package com.osfans.trime.PrefUI.dialog;
+package com.osfans.trime.ui.dialog;
 
 import android.app.AlertDialog;
 import android.content.Context;
 import android.content.DialogInterface;
+import android.widget.Toast;
 
 import com.osfans.trime.Utils.Config;
 import com.osfans.trime.R;
-import com.osfans.trime.ime.Trime;
 
-import java.util.Arrays;
-
-/** 顯示配色方案列表 */
-public class ColorDialog {
-  private String[] colorKeys;
-  private int checkedColor;
+/** 顯示輸入法內置數據列表，並回廠選中的數據 */
+public class ResetDialog {
+  /** 內置數據列表 */
+  private String[] items;
+  /** 列表勾選狀態 */
+  private boolean[] checked;
+  /** 回廠對話框 */
   private AlertDialog dialog;
 
-  private void selectColor(Context context) {
-    if (checkedColor < 0 || checkedColor >= colorKeys.length) return;
-    String color = colorKeys[checkedColor];
-    Config config = Config.get(context);
-    config.setColor(color);
-    Trime trime = Trime.getService();
-    if (trime != null) trime.initKeyboard(); //實時生效
+  private Context context;
+
+  /** 回廠選中的數據 */
+  private void select() {
+    if (items == null) return;
+    boolean ret = true;
+    int n = items.length;
+    for (int i = 0; i < n; i++) {
+      if (checked[i]) {
+        ret = Config.get(context).copyFileOrDir(context, items[i], true);
+      }
+    }
+    Toast.makeText(
+            context, ret ? R.string.reset_success : R.string.reset_failure, Toast.LENGTH_SHORT)
+        .show();
   }
 
-  public ColorDialog(final Context context) {
-    Config config = Config.get(context);
-    String colorScheme = config.getColorScheme();
-    colorKeys = config.getColorKeys();
-    if (colorKeys == null) return;
-    Arrays.sort(colorKeys);
-    checkedColor = Arrays.binarySearch(colorKeys, colorScheme);
-    String[] colorNames = config.getColorNames(colorKeys);
+  public ResetDialog(Context context) {
+    this.context = context;
+    items = Config.list(context, "rime");
+    if (items == null) return;
+    checked = new boolean[items.length];
     dialog =
         new AlertDialog.Builder(context)
-            .setTitle(R.string.pref_colors)
+            .setTitle(R.string.pref_reset)
             .setCancelable(true)
             .setNegativeButton(android.R.string.cancel, null)
             .setPositiveButton(
@@ -61,25 +67,31 @@ public class ColorDialog {
                 new DialogInterface.OnClickListener() {
                   @Override
                   public void onClick(DialogInterface di, int id) {
-                    selectColor(context);
+                    select();
                   }
                 })
-            .setSingleChoiceItems(
-                colorNames,
-                checkedColor,
-                new DialogInterface.OnClickListener() {
+            .setMultiChoiceItems(
+                items,
+                checked,
+                new DialogInterface.OnMultiChoiceClickListener() {
                   @Override
-                  public void onClick(DialogInterface di, int id) {
-                    checkedColor = id;
+                  public void onClick(DialogInterface di, int id, boolean isChecked) {
+                    checked[id] = isChecked;
                   }
                 })
             .create();
   }
 
+  /**
+   * 獲得回廠對話框
+   *
+   * @return 回廠對話框對象
+   */
   public AlertDialog getDialog() {
     return dialog;
   }
 
+  /** 彈出對話框 */
   public void show() {
     if (dialog != null) dialog.show();
   }

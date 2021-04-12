@@ -16,7 +16,7 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-package com.osfans.trime.PrefUI;
+package com.osfans.trime.ui;
 
 import android.Manifest;
 import android.annotation.TargetApi;
@@ -48,10 +48,10 @@ import com.osfans.trime.Utils.Function;
 import com.osfans.trime.R;
 import com.osfans.trime.ime.Rime;
 import com.osfans.trime.ime.Trime;
-import com.osfans.trime.PrefUI.dialog.ColorDialog;
-import com.osfans.trime.PrefUI.dialog.ResetDialog;
-import com.osfans.trime.PrefUI.dialog.SchemaDialog;
-import com.osfans.trime.PrefUI.dialog.ThemeDlg;
+import com.osfans.trime.ui.dialog.ColorDialog;
+import com.osfans.trime.ui.dialog.ResetDialog;
+import com.osfans.trime.ui.dialog.SchemaDialog;
+import com.osfans.trime.ui.dialog.ThemeDialog;
 
 import org.ocpsoft.prettytime.PrettyTime;
 
@@ -305,7 +305,7 @@ public class Pref extends PreferenceActivity
         ((InputMethodManager) getSystemService(INPUT_METHOD_SERVICE)).showInputMethodPicker();
         return true;
       case "pref_themes": //主題
-        new ThemeDlg(self);
+        new ThemeDialog(self);
         return true;
       case "pref_colors": //配色
         new ColorDialog(self).show();
