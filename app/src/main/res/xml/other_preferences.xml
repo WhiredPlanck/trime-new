@@ -1,0 +1,6 @@
+<?xml version="1.0" encoding="utf-8"?>
+<PreferenceScreen xmlns:android="http://schemas.android.com/apk/res/android"
+    android:key="pref_other" android:title="@string/pref_other">
+    <SwitchPreference android:key="pref_notification_icon" android:title="@string/pref_notification_icon" />
+    <SwitchPreference android:key="pref_destroy_on_quit" android:title="@string/pref_destroy_on_quit" />
+</PreferenceScreen>
