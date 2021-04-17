@@ -27,13 +27,13 @@ class SeekBarDialogPreference : Preference {
     @Suppress("unused")
     constructor(context: Context): this(context, null)
     constructor(context: Context, attrs: AttributeSet?): this(context, attrs, R.attr.preferenceStyle)
-    @SuppressLint("ResourceType")
     constructor(context: Context, attrs: AttributeSet?, defStyleAttr: Int): super(context, attrs, defStyleAttr) {
-        context.obtainStyledAttributes(attrs, intArrayOf(android.R.attr.max)).apply {
-            mMaxValue = getInt(0, 100)
-            defaultValue = seekBarProgressToActualValue(getInt(11,0))
-            Log.d("mMaxValue", mMaxValue.toString())
-            Log.d("defaultValue", defaultValue.toString())
+        //context.obtainStyledAttributes(attrs, intArrayOf(android.R.attr.max)).apply {
+        context.obtainStyledAttributes(attrs, R.styleable.SeekBarDialogPreferenceAttrs).apply {
+            mMaxValue = getInt(R.styleable.SeekBarDialogPreferenceAttrs_max, 100)
+            defaultValue = seekBarProgressToActualValue(getInt(R.styleable.SeekBarDialogPreferenceAttrs_android_defaultValue,0))
+            Log.d("mMaxValue of $key", mMaxValue.toString())
+            Log.d("defaultValue of $key", defaultValue.toString())
             recycle()
         }
         onPreferenceChangeListener = OnPreferenceChangeListener { _, newValue ->
@@ -48,7 +48,7 @@ class SeekBarDialogPreference : Preference {
 
     override fun onAttachedToHierarchy(preferenceManager: PreferenceManager?) {
         super.onAttachedToHierarchy(preferenceManager)
-        summary = getTextForValue(sharedPreferences.getInt(key, 0))
+        summary = getTextForValue(sharedPreferences.getInt(key, defaultValue))
     }
 
     private fun getTextForValue(value: Any): CharSequence {
@@ -59,16 +59,8 @@ class SeekBarDialogPreference : Preference {
             "key_vibrate_amplitude" -> ""
             else ->  "%"
         }
-        return value.toString() + unit
+        return "$value $unit"
     }
-
-    /*
-    override fun onGetDefaultValue(a: TypedArray?, index: Int): Any {
-        return if (a != null) {
-            Log.d("index", index.toString())
-            a.getInt(index, 0)
-        } else { 0 }
-    } */
 
     @SuppressLint("InflateParams")
     private fun showSeekBarDialog() {
@@ -86,13 +78,9 @@ class SeekBarDialogPreference : Preference {
                     valueView.text = getTextForValue(seekBarProgressToActualValue(progress))
                 }
 
-                override fun onStartTrackingTouch(seekBar: SeekBar?) {
-                    //TODO("Not yet implemented")
-                }
+                override fun onStartTrackingTouch(seekBar: SeekBar?) { }
 
-                override fun onStopTrackingTouch(seekBar: SeekBar?) {
-                    //TODO("Not yet implemented")
-                }
+                override fun onStopTrackingTouch(seekBar: SeekBar?) { }
             })
         }
         valueView.text = getTextForValue(initValue)
@@ -118,7 +106,7 @@ class SeekBarDialogPreference : Preference {
         if (event.action != KeyEvent.ACTION_DOWN) {
             return false
         }
-        val seekBar = view.findViewById<View>(R.id.seekbar) as SeekBar ?: return false
+        val seekBar = view.findViewById<View>(R.id.seekbar) as SeekBar
         return seekBar.onKeyDown(keyCode, event)
     }
 
