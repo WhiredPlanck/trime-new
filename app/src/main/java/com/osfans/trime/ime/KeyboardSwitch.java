@@ -20,8 +20,8 @@ package com.osfans.trime.ime;
 
 import android.content.Context;
 
-import com.osfans.trime.Utils.Config;
-import com.osfans.trime.Utils.Function;
+import com.osfans.trime.utils.Config;
+import com.osfans.trime.utils.Function;
 
 import java.util.List;
 

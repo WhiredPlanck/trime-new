@@ -27,7 +27,7 @@ import android.os.IBinder;
 import android.view.Window;
 import android.view.WindowManager;
 
-import com.osfans.trime.Utils.Config;
+import com.osfans.trime.utils.Config;
 import com.osfans.trime.R;
 import com.osfans.trime.ime.Trime;
 

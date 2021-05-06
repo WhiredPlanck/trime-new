@@ -45,8 +45,8 @@ import android.widget.PopupWindow;
 import android.widget.TextView;
 
 import com.osfans.trime.R;
-import com.osfans.trime.Utils.Config;
-import com.osfans.trime.Utils.Function;
+import com.osfans.trime.utils.Config;
+import com.osfans.trime.utils.Function;
 import com.osfans.trime.enums.KeyEventType;
 import java.lang.ref.WeakReference;
 import java.lang.reflect.Method;

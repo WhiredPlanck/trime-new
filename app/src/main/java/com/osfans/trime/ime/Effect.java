@@ -28,7 +28,7 @@ import java.util.Locale;
 import android.os.VibrationEffect;
 import android.os.Build;
 
-import com.osfans.trime.Utils.Function;
+import com.osfans.trime.utils.Function;
 
 /** 處理按鍵聲音、震動、朗讀等效果 */
 class Effect {

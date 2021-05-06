@@ -1,10 +1,10 @@
-package com.osfans.trime.Utils
+package com.osfans.trime.utils
 
 import android.annotation.SuppressLint
 import android.app.Application
 import android.content.Context
 
-class GlobalInfo: Application() {
+class TrimeApplication: Application() {
     companion object {
         @SuppressLint("StaticFieldLeak")
         lateinit var context: Context

@@ -28,7 +28,7 @@ import android.util.Log;
 import android.view.Window;
 import android.view.WindowManager;
 
-import com.osfans.trime.Utils.Function;
+import com.osfans.trime.utils.Function;
 import com.osfans.trime.R;
 import com.osfans.trime.ime.Rime;
 import com.osfans.trime.ime.Trime;

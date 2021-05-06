@@ -49,15 +49,16 @@ import android.widget.LinearLayout;
 import android.widget.PopupWindow;
 
 import com.osfans.trime.R;
-import com.osfans.trime.Utils.Config;
-import com.osfans.trime.Utils.Function;
-import com.osfans.trime.Utils.IntentReceiver;
-import com.osfans.trime.Utils.Speech;
 import com.osfans.trime.enums.InlineModeType;
 import com.osfans.trime.enums.WindowsPositionType;
 import com.osfans.trime.ui.dialog.ColorDialog;
 import com.osfans.trime.ui.dialog.SchemaDialog;
 import com.osfans.trime.ui.dialog.ThemeDialog;
+import com.osfans.trime.ui.dialog.ThemeDialog2;
+import com.osfans.trime.utils.Config;
+import com.osfans.trime.utils.Function;
+import com.osfans.trime.utils.IntentReceiver;
+import com.osfans.trime.utils.Speech;
 
 import java.util.Locale;
 import java.util.logging.Logger;
@@ -1145,8 +1146,9 @@ public class Trime extends InputMethodService
 
   /** 彈出{@link ColorDialog 配色對話框} */
   private void showColorDialog() {
-    AlertDialog dialog = new ColorDialog(this).getDialog();
-    showDialog(dialog);
+    //AlertDialog dialog = new ColorDialog(this).getDialog();
+    //showDialog(dialog);
+    new ColorDialog(this, mCandidateContainer.getWindowToken());
   }
 
   /** 彈出{@link SchemaDialog 輸入法方案對話框} */
@@ -1156,7 +1158,7 @@ public class Trime extends InputMethodService
 
   /** 彈出{@link ThemeDialog 配色對話框} */
   private void showThemeDialog() {
-    new ThemeDialog(this, mCandidateContainer.getWindowToken());
+    new ThemeDialog2(this, mCandidateContainer.getWindowToken());
   }
 
   private boolean handleOption(int keyCode) {

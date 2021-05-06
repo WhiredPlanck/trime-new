@@ -10,8 +10,9 @@
     <uses-permission android:name="android.permission.RECORD_AUDIO" />
     <uses-permission android:name="android.permission.SYSTEM_ALERT_WINDOW" />
 
+
     <application
-        android:name=".Utils.GlobalInfo"
+        android:name=".utils.TrimeApplication"
         android:allowBackup="false"
         android:icon="@drawable/icon"
         android:label="@string/ime_name"

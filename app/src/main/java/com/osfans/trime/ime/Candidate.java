@@ -30,8 +30,8 @@ import android.view.MotionEvent;
 import android.view.View;
 import android.view.ViewGroup.LayoutParams;
 
-import com.osfans.trime.Utils.Config;
-import com.osfans.trime.Utils.Function;
+import com.osfans.trime.utils.Config;
+import com.osfans.trime.utils.Function;
 
 /** 顯示候選字詞 */
 public class Candidate extends View {

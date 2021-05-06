@@ -20,7 +20,7 @@ package com.osfans.trime.ime;
 
 import android.content.Context;
 
-import com.osfans.trime.Utils.Config;
+import com.osfans.trime.utils.Config;
 
 import java.io.File;
 import java.util.ArrayList;

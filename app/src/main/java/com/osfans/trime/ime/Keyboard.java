@@ -23,7 +23,7 @@ import android.graphics.drawable.Drawable;
 import android.util.DisplayMetrics;
 import android.view.KeyEvent;
 
-import com.osfans.trime.Utils.Config;
+import com.osfans.trime.utils.Config;
 
 import java.util.ArrayList;
 import java.util.List;
