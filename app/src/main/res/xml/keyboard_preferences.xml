@@ -46,7 +46,7 @@
         <com.osfans.trime.ui.SeekBarDialogPreference
             android:key="key_sound_volume"
             android:title="@string/key_sound_volume"
-            android:max="100"
+            app:max="100"
             android:defaultValue="100"
             android:dependency="key_sound" />
 
@@ -56,13 +56,13 @@
         <com.osfans.trime.ui.SeekBarDialogPreference
             android:key="key_vibrate_duration"
             android:title="@string/key_vibrate_duration"
-            android:max="100"
+            app:max="100"
             android:defaultValue="10"
             android:dependency="key_vibrate"/>
         <com.osfans.trime.ui.SeekBarDialogPreference
             android:key="key_vibrate_amplitude"
             android:title="@string/key_vibrate_amplitude"
-            android:max="255"
+            app:max="255"
             android:defaultValue="0"
             android:dependency="key_vibrate"/>
     <!--        <SwitchPreference android:key="key_vibrate_default_amplitude" android:title="@string/key_vibrate_default_amplitude"/>-->
@@ -71,12 +71,12 @@
         <com.osfans.trime.ui.SeekBarDialogPreference
             android:key="longpress_timeout"
             android:title="@string/longpress_timeout"
-            android:max="60"
+            app:max="60"
             android:defaultValue="20" />
         <com.osfans.trime.ui.SeekBarDialogPreference
             android:key="repeat_interval"
             android:title="@string/repeat_interval"
-            android:max="9"
+            app:max="9"
             android:defaultValue="4" />
     </PreferenceCategory>
 
