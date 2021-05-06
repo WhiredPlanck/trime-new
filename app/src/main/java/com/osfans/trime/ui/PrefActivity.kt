@@ -2,16 +2,22 @@
 
 package com.osfans.trime.ui
 
+import android.Manifest
+import android.annotation.TargetApi
 import android.app.ProgressDialog
+import android.content.pm.PackageManager
+import android.os.Build
 import android.os.Bundle
 import android.util.Log
 import android.view.Menu
 import android.view.MenuItem
+import android.view.inputmethod.InputMethodManager
 import androidx.appcompat.app.AppCompatActivity
 import androidx.preference.Preference
 import androidx.preference.PreferenceFragmentCompat
 import com.osfans.trime.R
-import com.osfans.trime.Utils.Function
+import com.osfans.trime.utils.Function
+import kotlin.properties.Delegates
 import kotlin.system.exitProcess
 
 private val TITLE_TAG = PrefActivity::class.java.simpleName
@@ -36,6 +42,7 @@ class PrefActivity : AppCompatActivity(),
             }
         }
         supportActionBar?.setDisplayHomeAsUpEnabled(true)
+        requestPermissionsForApp()
     }
 
     override fun onSaveInstanceState(outState: Bundle) {
@@ -134,5 +141,26 @@ class PrefActivity : AppCompatActivity(),
             }
             else -> super.onOptionsItemSelected(item)
         }
+    }
+
+    @TargetApi(Build.VERSION_CODES.M)
+    private fun requestPermissionsForApp() {
+        //Request the permission for storage
+        if (checkSelfPermission(Manifest.permission.WRITE_EXTERNAL_STORAGE)
+                != PackageManager.PERMISSION_GRANTED) {
+            requestPermissions(arrayOf(
+                    Manifest.permission.WRITE_EXTERNAL_STORAGE, Manifest.permission.READ_EXTERNAL_STORAGE
+            ),
+                    0)
+        }
+    }
+
+    private fun isImeEnabled(): Boolean {
+        var enabled by Delegates.notNull<Boolean>()
+        for ( i in (getSystemService(INPUT_METHOD_SERVICE) as InputMethodManager).enabledInputMethodList) {
+            enabled = packageName == i.packageName
+            break
+        }
+        return enabled
     }
 }

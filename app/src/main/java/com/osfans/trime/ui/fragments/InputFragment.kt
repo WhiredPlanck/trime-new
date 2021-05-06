@@ -1,3 +1,5 @@
+@file:Suppress("DEPRECATION")
+
 package com.osfans.trime.ui.fragments
 
 import android.app.ProgressDialog
@@ -8,18 +10,18 @@ import android.view.Menu
 import androidx.preference.Preference
 import androidx.preference.PreferenceFragmentCompat
 import androidx.preference.SwitchPreference
+import com.osfans.trime.R
 import com.osfans.trime.ui.PrefActivity
 import com.osfans.trime.ui.dialog.ResetDialog
 import com.osfans.trime.ui.dialog.SchemaDialog
-import com.osfans.trime.R
-import com.osfans.trime.Utils.Function
+import com.osfans.trime.utils.Function
 import org.ocpsoft.prettytime.PrettyTime
 import java.util.*
 import kotlin.system.exitProcess
 
-private val TITLE_TAG: String = PrefActivity::class.java.simpleName
-
 class InputFragment : PreferenceFragmentCompat() {
+    private val TITLE_TAG: String = PrefActivity::class.java.simpleName
+
     override fun onCreatePreferences(savedInstanceState: Bundle?, rootKey: String?) {
         setPreferencesFromResource(R.xml.input_preferences, rootKey)
         setHasOptionsMenu(true)
@@ -37,9 +39,10 @@ class InputFragment : PreferenceFragmentCompat() {
                 true
             }
             "pref_sync" -> {
-                val mProgressDialog = ProgressDialog(context)
-                mProgressDialog.setMessage(getString(R.string.sync_progress))
-                mProgressDialog.show()
+                val mProgressDialog = ProgressDialog(context).apply {
+                    setMessage(getString(R.string.sync_progress))
+                    show()
+                }
                 Thread {
                     Runnable {
                         try {
@@ -59,7 +62,7 @@ class InputFragment : PreferenceFragmentCompat() {
                 true
             }
             "pref_reset" -> {
-                ResetDialog(context).show()
+                context?.let { ResetDialog(it) }
                 true
             }
             else -> super.onPreferenceTreeClick(preference)
@@ -67,7 +70,7 @@ class InputFragment : PreferenceFragmentCompat() {
     }
 
 
-    fun setBackgroundSyncSummary(context: Context?) {
+    private fun setBackgroundSyncSummary(context: Context?) {
         val switchPreference = findPreference<SwitchPreference>("pref_sync_bg")
         if (context == null) {
             if (switchPreference?.isChecked == true) {
