@@ -9,8 +9,10 @@ import com.osfans.trime.ui.dialog.ColorDialog
 import com.osfans.trime.ui.dialog.ThemeDialog
 import com.osfans.trime.R
 import com.osfans.trime.ime.Trime
+import com.osfans.trime.ui.dialog.ThemeDialog2
 
-class KeyboardFragment : PreferenceFragmentCompat(), SharedPreferences.OnSharedPreferenceChangeListener {
+class KeyboardFragment : PreferenceFragmentCompat(),
+        SharedPreferences.OnSharedPreferenceChangeListener {
     override fun onCreatePreferences(savedInstanceState: Bundle?, rootKey: String?) {
         setPreferencesFromResource(R.xml.keyboard_preferences, rootKey)
         setHasOptionsMenu(true)
@@ -54,11 +56,11 @@ class KeyboardFragment : PreferenceFragmentCompat(), SharedPreferences.OnSharedP
     override fun onPreferenceTreeClick(preference: Preference?): Boolean {
         return when (preference?.key) {
             "pref_themes" -> {
-                ThemeDialog(context)
+                context?.let { ThemeDialog2(it) }
                 true
             }
             "pref_colors" -> {
-                ColorDialog(context).show()
+                context?.let { ColorDialog(it) }
                 true
             }
             else -> super.onPreferenceTreeClick(preference)
