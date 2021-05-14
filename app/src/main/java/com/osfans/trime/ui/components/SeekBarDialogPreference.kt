@@ -1,4 +1,4 @@
-package com.osfans.trime.ui
+package com.osfans.trime.ui.components
 
 import android.annotation.SuppressLint
 import android.content.Context

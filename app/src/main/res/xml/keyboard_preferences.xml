@@ -43,7 +43,7 @@
         <SwitchPreference
             android:key="key_sound"
             android:title="@string/key_sound"/>
-        <com.osfans.trime.ui.SeekBarDialogPreference
+        <com.osfans.trime.ui.components.SeekBarDialogPreference
             android:key="key_sound_volume"
             android:title="@string/key_sound_volume"
             app:max="100"
@@ -53,13 +53,13 @@
         <SwitchPreference
             android:key="key_vibrate"
             android:title="@string/key_vibrate"/>
-        <com.osfans.trime.ui.SeekBarDialogPreference
+        <com.osfans.trime.ui.components.SeekBarDialogPreference
             android:key="key_vibrate_duration"
             android:title="@string/key_vibrate_duration"
             app:max="100"
             android:defaultValue="10"
             android:dependency="key_vibrate"/>
-        <com.osfans.trime.ui.SeekBarDialogPreference
+        <com.osfans.trime.ui.components.SeekBarDialogPreference
             android:key="key_vibrate_amplitude"
             android:title="@string/key_vibrate_amplitude"
             app:max="255"
@@ -68,12 +68,12 @@
     <!--        <SwitchPreference android:key="key_vibrate_default_amplitude" android:title="@string/key_vibrate_default_amplitude"/>-->
         <SwitchPreference android:key="speak_key" android:title="@string/speak_key"/>
         <SwitchPreference android:key="speak_commit" android:title="@string/speak_commit"/>
-        <com.osfans.trime.ui.SeekBarDialogPreference
+        <com.osfans.trime.ui.components.SeekBarDialogPreference
             android:key="longpress_timeout"
             android:title="@string/longpress_timeout"
             app:max="60"
             android:defaultValue="20" />
-        <com.osfans.trime.ui.SeekBarDialogPreference
+        <com.osfans.trime.ui.components.SeekBarDialogPreference
             android:key="repeat_interval"
             android:title="@string/repeat_interval"
             app:max="9"

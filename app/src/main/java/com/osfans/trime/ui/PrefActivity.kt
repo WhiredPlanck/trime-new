@@ -5,9 +5,12 @@ package com.osfans.trime.ui
 import android.Manifest
 import android.annotation.TargetApi
 import android.app.ProgressDialog
+import android.content.Context
+import android.content.Intent
 import android.content.pm.PackageManager
 import android.os.Build
 import android.os.Bundle
+import android.provider.Settings
 import android.util.Log
 import android.view.Menu
 import android.view.MenuItem
@@ -17,7 +20,6 @@ import androidx.preference.Preference
 import androidx.preference.PreferenceFragmentCompat
 import com.osfans.trime.R
 import com.osfans.trime.utils.Function
-import kotlin.properties.Delegates
 import kotlin.system.exitProcess
 
 private val TITLE_TAG = PrefActivity::class.java.simpleName
@@ -25,9 +27,14 @@ private val TITLE_TAG = PrefActivity::class.java.simpleName
 class PrefActivity : AppCompatActivity(),
         PreferenceFragmentCompat.OnPreferenceStartFragmentCallback {
 
+    lateinit var imm: InputMethodManager
+
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.pref_activity)
+
+        imm = getSystemService(Context.INPUT_METHOD_SERVICE) as InputMethodManager
+
         if (savedInstanceState == null) {
             supportFragmentManager
                     .beginTransaction()
@@ -53,9 +60,6 @@ class PrefActivity : AppCompatActivity(),
 
     override fun onSupportNavigateUp(): Boolean {
         if (supportFragmentManager.popBackStackImmediate()) {
-            return true
-        } else if (supportFragmentManager.backStackEntryCount == 0) {
-            finish()
             return true
         }
         return super.onSupportNavigateUp()
@@ -84,33 +88,52 @@ class PrefActivity : AppCompatActivity(),
     }
 
     class HeaderFragment : PreferenceFragmentCompat() {
+        var prefEnable : Preference? = null
+        var prefSelect : Preference? = null
+
         override fun onCreatePreferences(savedInstanceState: Bundle?, rootKey: String?) {
             setPreferencesFromResource(R.xml.prefs, rootKey)
+            prefEnable = findPreference("pref_enable")
+            prefSelect = findPreference("pref_select")
+
+            if (checkIfImeIsEnabled(requireContext())) {
+                prefEnable?.isVisible = false
+            }
+            if (checkIfImeIsSelected(requireContext())) {
+                prefSelect?.isVisible = false
+            }
         }
-        /*
+
+        override fun onResume() {
+            super.onResume()
+            if (checkIfImeIsEnabled(requireContext())) {
+                prefEnable?.isVisible = false
+            }
+            if (checkIfImeIsSelected(requireContext())) {
+                prefSelect?.isVisible = false
+            }
+        }
+
         override fun onPreferenceTreeClick(preference: Preference?): Boolean {
             return when (preference?.key) {
-                "pref_deploy" -> {
-                    val mProgressDialog = ProgressDialog(context)
-                    mProgressDialog.setMessage(getString(R.string.deploy_progress))
-                    mProgressDialog.show()
-                    Thread {
-                        Runnable {
-                            try {
-                                Function.deploy(context)
-                            } catch (ex: Exception) {
-                                Log.e(TITLE_TAG, "Deploy Exception: $ex")
-                            } finally {
-                                mProgressDialog.dismiss()
-                                exitProcess(0) //清理內存
-                            }
-                        }.run()
-                    }.start()
+                "pref_enable" -> {
+                    val intent = Intent()
+                    intent.action = Settings.ACTION_INPUT_METHOD_SETTINGS
+                    intent.addCategory(Intent.CATEGORY_DEFAULT)
+                    startActivity(intent)
                     true
                 }
-                else -> super.onPreferenceTreeClick(preference)
+                "pref_select" -> {
+                    (activity as PrefActivity).imm.showInputMethodPicker()
+                    if (checkIfImeIsSelected(requireContext())) {
+                        prefSelect?.isVisible = false
+                    }
+                    true
+                } else -> super.onPreferenceTreeClick(preference)
             }
-        }*/
+        }
+
+
     }
 
     override fun onCreateOptionsMenu(menu: Menu?): Boolean {
@@ -121,10 +144,15 @@ class PrefActivity : AppCompatActivity(),
 
     override fun onOptionsItemSelected(item: MenuItem): Boolean {
         return when (item.itemId) {
+            android.R.id.home -> {
+                onBackPressed()
+                true
+            }
             R.id.option_menu_deploy -> {
-                val mProgressDialog = ProgressDialog(this)
-                mProgressDialog.setMessage(getString(R.string.deploy_progress))
-                mProgressDialog.show()
+                val mProgressDialog = ProgressDialog(this).apply {
+                    setMessage(getString(R.string.deploy_progress))
+                    show()
+                }
                 Thread {
                     Runnable {
                         try {
@@ -155,12 +183,27 @@ class PrefActivity : AppCompatActivity(),
         }
     }
 
-    private fun isImeEnabled(): Boolean {
-        var enabled by Delegates.notNull<Boolean>()
-        for ( i in (getSystemService(INPUT_METHOD_SERVICE) as InputMethodManager).enabledInputMethodList) {
-            enabled = packageName == i.packageName
-            break
+    companion object {
+        private const val IME_ID : String = "com.osfans.trime/.ime.Trime"
+
+        fun checkIfImeIsEnabled(context: Context) : Boolean {
+            val activeImeIds = Settings.Secure.getString(
+                context.contentResolver,
+                Settings.Secure.ENABLED_INPUT_METHODS
+            ) ?: "(none)"
+            Log.i(TITLE_TAG, "List of active IMEs: $activeImeIds")
+            return activeImeIds.split(":").contains(IME_ID)
         }
-        return enabled
+
+        fun checkIfImeIsSelected(context: Context) : Boolean {
+            val selectedImeId = Settings.Secure.getString(
+                context.contentResolver,
+                Settings.Secure.DEFAULT_INPUT_METHOD
+            ) ?: "(none)"
+            Log.i(TITLE_TAG, "Selected IME: $selectedImeId")
+            return selectedImeId == IME_ID
+        }
     }
+
+
 }
