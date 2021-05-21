@@ -14,6 +14,7 @@ import com.osfans.trime.R
 import com.osfans.trime.ui.PrefActivity
 import com.osfans.trime.ui.dialog.ResetDialog
 import com.osfans.trime.ui.dialog.SchemaDialog
+import com.osfans.trime.ui.dialog.SchemaDialog2
 import com.osfans.trime.utils.Function
 import org.ocpsoft.prettytime.PrettyTime
 import java.util.*
@@ -35,7 +36,7 @@ class InputFragment : PreferenceFragmentCompat() {
     override fun onPreferenceTreeClick(preference: Preference?): Boolean {
         return when (preference?.key) {
             "pref_schemas" -> {
-                SchemaDialog(context)
+                context?.let { SchemaDialog2(it) }
                 true
             }
             "pref_sync" -> {

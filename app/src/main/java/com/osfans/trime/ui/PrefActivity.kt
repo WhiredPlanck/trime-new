@@ -125,9 +125,6 @@ class PrefActivity : AppCompatActivity(),
                 }
                 "pref_select" -> {
                     (activity as PrefActivity).imm.showInputMethodPicker()
-                    if (checkIfImeIsSelected(requireContext())) {
-                        prefSelect?.isVisible = false
-                    }
                     true
                 } else -> super.onPreferenceTreeClick(preference)
             }
@@ -165,6 +162,14 @@ class PrefActivity : AppCompatActivity(),
                         }
                     }.run()
                 }.start()
+                true
+            }
+            R.id.option_menu_about -> {
+                startActivity(Intent(this, AboutActivity::class.java))
+                true
+            }
+            R.id.option_menu_help -> {
+                startActivity(Intent(this, HelpNFeedbackActivity::class.java))
                 true
             }
             else -> super.onOptionsItemSelected(item)

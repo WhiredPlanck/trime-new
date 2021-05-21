@@ -53,12 +53,13 @@
     <Preference android:fragment="com.osfans.trime.ui.fragments.OtherFragment"
         android:key="pref_other" android:order="17" android:title="@string/pref_other" />
 
+    <!--
     <Preference android:fragment="com.osfans.trime.ui.fragments.HelpFragment"
         android:order="32"
         android:key="pref_help"  android:title="@string/pref_help" />
 
     <Preference android:fragment="com.osfans.trime.ui.fragments.AboutFragment"
         android:order="64"
-        android:key="pref_about" android:title="@string/pref_about" />
+        android:key="pref_about" android:title="@string/pref_about" /> -->
 
 </PreferenceScreen>

@@ -10,7 +10,6 @@
     <uses-permission android:name="android.permission.RECORD_AUDIO" />
     <uses-permission android:name="android.permission.SYSTEM_ALERT_WINDOW" />
 
-
     <application
         android:name=".utils.TrimeApplication"
         android:allowBackup="false"
@@ -18,9 +17,8 @@
         android:label="@string/ime_name"
         android:requestLegacyExternalStorage="true"
         android:theme="@style/Theme.AppCompat.DayNight.DarkActionBar">
-        <!-- <activity
-            android:name=".PrefUI.PrefActivity"
-            android:label="@string/title_activity_pref"></activity> -->
+        <activity android:name=".ui.HelpNFeedbackActivity"></activity>
+        <activity android:name=".ui.AboutActivity" />
 
         <service
             android:name=".ime.Trime"
@@ -37,7 +35,8 @@
 
         <activity
             android:name=".ui.PrefActivity"
-            android:label="@string/ime_name">
+            android:label="@string/ime_name"
+            android:theme="@style/Theme.AppCompat.DayNight.DarkActionBar">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
 
