@@ -100,12 +100,26 @@ configure_file(
   "${CMAKE_BINARY_DIR}/include/snappy-stubs-public.h"
   )
 
-# marisa
-file(GLOB_RECURSE MARISA_SOURCES marisa-trie/lib/marisa/*.cc)
-add_library(marisa-static STATIC ${MARISA_SOURCES})
+# Marisa
+# file(GLOB_RECURSE MARISA_SOURCES marisa-trie/lib/marisa/*.cc)
+set(
+    LIBMARISA_SOURCES
+    marisa-trie/lib/marisa/trie.cc
+    marisa-trie/lib/marisa/agent.cc
+    marisa-trie/lib/marisa/keyset.cc
+    marisa-trie/lib/marisa/grimoire/io/reader.cc
+    marisa-trie/lib/marisa/grimoire/io/writer.cc
+    marisa-trie/lib/marisa/grimoire/io/mapper.cc
+    marisa-trie/lib/marisa/grimoire/trie/louds-trie.cc
+    marisa-trie/lib/marisa/grimoire/trie/tail.cc
+    marisa-trie/lib/marisa/grimoire/vector/bit-vector.cc
+)
+add_library(marisa-static STATIC ${LIBMARISA_SOURCES})
 target_include_directories(marisa-static BEFORE PRIVATE
   marisa-trie/lib
-  )
+  marisa-trie/include
+)
+
 
 # marisa tools
 set(MARISA_CMDOPT marisa-trie/tools/cmdopt.cc)
@@ -234,21 +248,25 @@ configure_file(
   "${CMAKE_BINARY_DIR}/include/glog/logging.h"
   COPYONLY)
 
-# opencc
+# OpenCC
 #add_subdirectory(OpenCC)
-set(OPENCC_SOURCES
-  OpenCC/src/BinaryDict.cpp
+set(
+  LIBOPENCC_SOURCES
+  # OpenCC/src/BinaryDict.cpp
   OpenCC/src/Config.cpp
   OpenCC/src/Conversion.cpp
   OpenCC/src/ConversionChain.cpp
   OpenCC/src/Converter.cpp
-  OpenCC/src/DartsDict.cpp
+  # OpenCC/src/DartsDict.cpp
   OpenCC/src/Dict.cpp
   OpenCC/src/DictConverter.cpp
   OpenCC/src/DictEntry.cpp
   OpenCC/src/DictGroup.cpp
+  OpenCC/src/Lexicon.cpp
+  OpenCC/src/MarisaDict.cpp
   OpenCC/src/MaxMatchSegmentation.cpp
   OpenCC/src/PhraseExtract.cpp
+  OpenCC/src/SerializedValues.cpp
   OpenCC/src/SimpleConverter.cpp
   OpenCC/src/Segmentation.cpp
   OpenCC/src/TextDict.cpp
@@ -257,17 +275,20 @@ set(OPENCC_SOURCES
   )
 
 if(OPENCC_BUILD_SHARED_LIBS)
-  add_library(opencc ${OPENCC_SOURCES})
+	add_library(opencc ${LIBOPENCC_SOURCES})
 else(OPENCC_BUILD_SHARED_LIBS)
-  add_library(opencc STATIC ${OPENCC_SOURCES})
+	add_library(opencc STATIC ${LIBOPENCC_SOURCES})
 endif()
 
+target_link_libraries(opencc marisa-static ${STATIC_FLAGS})
 target_include_directories(opencc BEFORE PRIVATE
   OpenCC/deps/darts-clone
-  OpenCC/deps/rapidjson-0.11
-  OpenCC/deps/tclap-1.2.1
+  # OpenCC/deps/marisa-0.2.6/include
+  marisa-trie/include
+  OpenCC/deps/rapidjson-1.1.0
+  OpenCC/deps/tclap-1.2.2
   )
-target_compile_definitions(opencc PRIVATE VERSION="1.0.5")
+target_compile_definitions(opencc PRIVATE VERSION="1.1.2")
 if(ANDROID)
 elseif(UNIX)
 target_compile_definitions(opencc PRIVATE PKGDATADIR="/usr/share/opencc")
@@ -275,13 +296,13 @@ endif()
 
 set(
   LIBOPENCC_HEADERS
-  BinaryDict.hpp
+  # BinaryDict.hpp
   Common.hpp
   Config.hpp
   Conversion.hpp
   ConversionChain.hpp
   Converter.hpp
-  DartsDict.hpp
+  # DartsDict.hpp
   Dict.hpp
   DictConverter.hpp
   DictEntry.hpp
@@ -289,12 +310,14 @@ set(
   Exception.hpp
   Export.hpp
   Lexicon.hpp
+  MarisaDict.hpp
   MaxMatchSegmentation.hpp
   Optional.hpp
   PhraseExtract.hpp
   Segmentation.hpp
   Segments.hpp
   SerializableDict.hpp
+  SerializedValues.hpp
   SimpleConverter.hpp
   TextDict.hpp
   UTF8StringSlice.hpp
@@ -313,21 +336,24 @@ add_executable(opencc_tool OpenCC/src/tools/CommandLine.cpp)
 target_link_libraries(opencc_tool opencc ${STATIC_FLAGS})
 target_include_directories(opencc_tool BEFORE PRIVATE
   OpenCC/src
-  OpenCC/deps/tclap-1.2.1
+  marisa-trie/include
+  OpenCC/deps/tclap-1.2.2
   )
 ## opencc_dict
 add_executable(opencc_dict OpenCC/src/tools/DictConverter.cpp)
 target_link_libraries(opencc_dict opencc ${STATIC_FLAGS})
 target_include_directories(opencc_dict BEFORE PRIVATE
   OpenCC/src
-  OpenCC/deps/tclap-1.2.1
+  marisa-trie/include
+  OpenCC/deps/tclap-1.2.2
   )
 ## opencc_phrase_extract
 add_executable(opencc_phrase_extract OpenCC/src/tools/PhraseExtract.cpp)
 target_link_libraries(opencc_phrase_extract opencc ${STATIC_FLAGS})
 target_include_directories(opencc_phrase_extract BEFORE PRIVATE
   OpenCC/src
-  OpenCC/deps/tclap-1.2.1
+  marisa-trie/include
+  OpenCC/deps/tclap-1.2.2
   )
 
 # rime plugins

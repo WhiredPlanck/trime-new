@@ -17,7 +17,7 @@
         android:label="@string/ime_name"
         android:requestLegacyExternalStorage="true"
         android:theme="@style/Theme.AppCompat.DayNight.DarkActionBar">
-        <activity android:name=".ui.HelpNFeedbackActivity"></activity>
+        <activity android:name=".ui.HelpNFeedbackActivity" />
         <activity android:name=".ui.AboutActivity" />
 
         <service

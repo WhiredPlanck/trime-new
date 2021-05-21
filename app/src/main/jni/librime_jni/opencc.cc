@@ -11,13 +11,13 @@ jstring get_opencc_version(JNIEnv *env, jobject thiz) {
 }
 
 jstring opencc_convert(JNIEnv *env, jobject thiz, jstring line, jstring name) {
-  if (name == NULL) return line;
-  const char* s = env->GetStringUTFChars(name, NULL);
-  string str(s);
+  if (name == nullptr) return line;
+  const char* s = env->GetStringUTFChars(name, nullptr);
+  std::string str(s);
   SimpleConverter converter(str);
   env->ReleaseStringUTFChars(name, s);
-  const char* input = env->GetStringUTFChars(line, NULL);
-  const string& converted = converter.Convert(input);
+  const char* input = env->GetStringUTFChars(line, nullptr);
+  const std::string& converted = converter.Convert(input);
   env->ReleaseStringUTFChars(line, input);
   s = converted.c_str();
   return newJstring(env, s);
@@ -25,17 +25,17 @@ jstring opencc_convert(JNIEnv *env, jobject thiz, jstring line, jstring name) {
 
 void opencc_convert_dictionary(JNIEnv *env, jobject thiz, jstring jinputFileName,
     jstring joutputFileName, jstring jformatFrom, jstring jformatTo) {
-  const char* s = env->GetStringUTFChars(jinputFileName, NULL);
-  string inputFileName(s);
+  const char* s = env->GetStringUTFChars(jinputFileName, nullptr);
+  std::string inputFileName(s);
   env->ReleaseStringUTFChars(jinputFileName, s);
-  s = env->GetStringUTFChars(joutputFileName, NULL);
-  string outputFileName(s);
+  s = env->GetStringUTFChars(joutputFileName, nullptr);
+  std::string outputFileName(s);
   env->ReleaseStringUTFChars(joutputFileName, s);
-  s = env->GetStringUTFChars(jformatFrom, NULL);
-  string formatFrom(s);
+  s = env->GetStringUTFChars(jformatFrom, nullptr);
+  std::string formatFrom(s);
   env->ReleaseStringUTFChars(jformatFrom, s);
-  s = env->GetStringUTFChars(jformatTo, NULL);
-  string formatTo(s);
+  s = env->GetStringUTFChars(jformatTo, nullptr);
+  std::string formatTo(s);
   env->ReleaseStringUTFChars(jformatTo, s);
   ConvertDictionary(inputFileName, outputFileName, formatFrom, formatTo);
 }
