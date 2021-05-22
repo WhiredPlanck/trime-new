@@ -4,9 +4,7 @@
 [![License: GPL v3](https://img.shields.io/badge/License-GPL%20v3-blue.svg)](https://www.gnu.org/licenses/gpl-3.0)
 
 ## 截图
-![Screenshot_1621689856.png](https://i.loli.net/2021/05/22/lP3eFWyndrc8R6a.png)
-![Screenshot_1621689879.png](https://i.loli.net/2021/05/22/milrOUIzSdaPQgu.png)
-![Screenshot_1621689900.png](https://i.loli.net/2021/05/22/9PSi7pGI3MtjO8a.png)
+<img src="https://i.loli.net/2021/05/22/lP3eFWyndrc8R6a.png" alt="Screenshot_1621689856.png" style="zoom: 33%;" /> <img src="https://i.loli.net/2021/05/22/milrOUIzSdaPQgu.png" alt="Screenshot_1621689879.png" style="zoom:33%;" /> <img src="https://i.loli.net/2021/05/22/9PSi7pGI3MtjO8a.png" alt="Screenshot_1621689900.png" style="zoom:33%;" />
 
 ## 关于
 有关源项目的信息，请参阅[这里](https://github.com/osfans/trime#readme)。
