@@ -2,7 +2,7 @@
 <PreferenceScreen xmlns:android="http://schemas.android.com/apk/res/android">
     <Preference android:key="pref_changelog" android:title="@string/pref_changelog">
         <intent android:action="android.intent.action.VIEW"
-            android:data="https://github.com/osfans/trime" />
+            android:data="https://github.com/WhiredPlanck/trime-new" />
     </Preference>
     <Preference android:key="pref_librime_ver" android:title="@string/pref_librime_ver">
         <intent android:action="android.intent.action.VIEW"
