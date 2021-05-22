@@ -47,18 +47,18 @@ import android.view.inputmethod.InputMethodManager;
 import android.widget.FrameLayout;
 import android.widget.LinearLayout;
 import android.widget.PopupWindow;
+import android.widget.Toast;
 
 import com.osfans.trime.R;
 import com.osfans.trime.enums.InlineModeType;
 import com.osfans.trime.enums.WindowsPositionType;
-import com.osfans.trime.ui.dialog.ColorDialog;
-import com.osfans.trime.ui.dialog.SchemaDialog;
-import com.osfans.trime.ui.dialog.ThemeDialog;
-import com.osfans.trime.ui.dialog.ThemeDialog2;
+import com.osfans.trime.ui.dialogs.ColorDialog;
+import com.osfans.trime.ui.dialogs.SchemaDialog2;
+import com.osfans.trime.ui.dialogs.ThemeDialog2;
 import com.osfans.trime.utils.Config;
 import com.osfans.trime.utils.Function;
-import com.osfans.trime.utils.IntentReceiver;
-import com.osfans.trime.utils.Speech;
+import com.osfans.trime.utils.IntentReceiver2;
+import com.osfans.trime.utils.Speech2;
 
 import java.util.Locale;
 import java.util.logging.Logger;
@@ -104,7 +104,7 @@ public class Trime extends InputMethodService
   private WindowsPositionType winPos; //候選窗口彈出位置
   private InlineModeType inlinePreedit; //嵌入模式
 
-  private IntentReceiver mIntentReceiver;
+  private IntentReceiver2 mIntentReceiver;
   static private Handler syncBackgroundHandler=new  Handler(new Handler.Callback() {
     @Override
     public boolean handleMessage(Message msg) {
@@ -279,7 +279,7 @@ public class Trime extends InputMethodService
   public void onCreate() {
     super.onCreate();
     self = this;
-    mIntentReceiver = new IntentReceiver();
+    mIntentReceiver = new IntentReceiver2();
     mIntentReceiver.registerReceiver(this);
 
     mEffect = new Effect(this);
@@ -872,7 +872,7 @@ public class Trime extends InputMethodService
           updateComposing();
         }
       } else if (code == KeyEvent.KEYCODE_VOICE_ASSIST) { //語音輸入
-        new Speech(this).start();
+        new Speech2(this).startSpeak();
       } else if (code == KeyEvent.KEYCODE_SETTINGS) { //設定
         switch (event.getOption()) {
           case "theme":
@@ -1148,17 +1148,32 @@ public class Trime extends InputMethodService
   private void showColorDialog() {
     //AlertDialog dialog = new ColorDialog(this).getDialog();
     //showDialog(dialog);
-    new ColorDialog(this, mCandidateContainer.getWindowToken());
+    try {
+      new ColorDialog(this, mCandidateContainer.getWindowToken());
+    } catch (Exception e) {
+      Log.info("Error popping up window: " + e);
+      Toast.makeText(this, R.string.show_dialog_error, Toast.LENGTH_LONG).show();
+    }
   }
 
   /** 彈出{@link SchemaDialog 輸入法方案對話框} */
   private void showSchemaDialog() {
-    new SchemaDialog(this, mCandidateContainer.getWindowToken());
+    try {
+      new SchemaDialog2(this, mCandidateContainer.getWindowToken());
+    } catch (Exception e) {
+      Log.info("Error popping up window: " + e);
+      Toast.makeText(this, R.string.show_dialog_error, Toast.LENGTH_LONG).show();
+    }
   }
 
   /** 彈出{@link ThemeDialog 配色對話框} */
   private void showThemeDialog() {
-    new ThemeDialog2(this, mCandidateContainer.getWindowToken());
+    try {
+      new ThemeDialog2(this, mCandidateContainer.getWindowToken());
+    } catch (Exception e) {
+      Log.info("Error popping up window: " + e);
+      Toast.makeText(this, R.string.show_dialog_error, Toast.LENGTH_LONG).show();
+    }
   }
 
   private boolean handleOption(int keyCode) {

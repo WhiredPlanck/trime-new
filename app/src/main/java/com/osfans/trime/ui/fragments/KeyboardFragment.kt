@@ -5,11 +5,10 @@ import android.os.Bundle
 import android.view.Menu
 import androidx.preference.Preference
 import androidx.preference.PreferenceFragmentCompat
-import com.osfans.trime.ui.dialog.ColorDialog
-import com.osfans.trime.ui.dialog.ThemeDialog
+import com.osfans.trime.ui.dialogs.ColorDialog
 import com.osfans.trime.R
 import com.osfans.trime.ime.Trime
-import com.osfans.trime.ui.dialog.ThemeDialog2
+import com.osfans.trime.ui.dialogs.ThemeDialog2
 
 class KeyboardFragment : PreferenceFragmentCompat(),
         SharedPreferences.OnSharedPreferenceChangeListener {

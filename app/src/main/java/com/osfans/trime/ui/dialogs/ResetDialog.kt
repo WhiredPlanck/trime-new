@@ -1,4 +1,4 @@
-package com.osfans.trime.ui.dialog
+package com.osfans.trime.ui.dialogs
 
 import androidx.appcompat.app.AlertDialog
 import android.content.Context

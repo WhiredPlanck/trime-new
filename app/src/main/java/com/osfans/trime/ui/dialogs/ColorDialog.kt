@@ -1,4 +1,4 @@
-package com.osfans.trime.ui.dialog
+package com.osfans.trime.ui.dialogs
 
 import android.os.IBinder
 import android.view.Window
@@ -8,7 +8,6 @@ import android.content.Context
 import com.osfans.trime.R
 import com.osfans.trime.ime.Trime
 import com.osfans.trime.utils.Config
-import com.osfans.trime.utils.TrimeApplication.Companion.context
 import kotlin.properties.Delegates
 
 class ColorDialog {

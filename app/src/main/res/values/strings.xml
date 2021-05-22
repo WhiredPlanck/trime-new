@@ -1,5 +1,4 @@
-<?xml version="1.0" encoding="utf-8"?>
-<!--
+<?xml version="1.0" encoding="utf-8"?><!--
 /**
  * Copyright (C) 2015-present, osfans
  * waxaca@163.com https://github.com/osfans
@@ -104,4 +103,6 @@
     <string name="category_pref_keyboard_appearance">Keyboard Appearance</string>
     <string name="category_pref_keyboard_functions">Keyboard Functions</string>
     <string name="category_pref_keyboard_effects">Keyboard Effects</string>
+    <string name="on_ready_for_speech">Please start speaking.</string>
+    <string name="show_dialog_error">Popping up dialog failed. Please check your overlays permission.</string>
 </resources>

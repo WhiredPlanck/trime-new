@@ -1,5 +1,3 @@
-@file:Suppress("DEPRECATION")
-
 package com.osfans.trime.ui
 
 import android.Manifest
@@ -146,7 +144,7 @@ class PrefActivity : AppCompatActivity(),
                 true
             }
             R.id.option_menu_deploy -> {
-                val mProgressDialog = ProgressDialog(this).apply {
+                @Suppress("DEPRECATION") val mProgressDialog = ProgressDialog(this).apply {
                     setMessage(getString(R.string.deploy_progress))
                     show()
                 }

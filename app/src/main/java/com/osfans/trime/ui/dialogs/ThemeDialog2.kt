@@ -1,6 +1,6 @@
 @file:Suppress("DEPRECATION")
 
-package com.osfans.trime.ui.dialog
+package com.osfans.trime.ui.dialogs
 
 import android.app.ProgressDialog
 import android.os.IBinder
@@ -14,7 +14,6 @@ import android.app.AlertDialog
 import android.content.Context
 import android.util.Log
 import android.view.Window
-import com.osfans.trime.utils.TrimeApplication.Companion.context
 
 class ThemeDialog2: CoroutineScope {
     private val job = Job()

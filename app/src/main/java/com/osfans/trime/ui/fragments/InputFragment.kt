@@ -12,9 +12,8 @@ import androidx.preference.PreferenceFragmentCompat
 import androidx.preference.SwitchPreference
 import com.osfans.trime.R
 import com.osfans.trime.ui.PrefActivity
-import com.osfans.trime.ui.dialog.ResetDialog
-import com.osfans.trime.ui.dialog.SchemaDialog
-import com.osfans.trime.ui.dialog.SchemaDialog2
+import com.osfans.trime.ui.dialogs.ResetDialog
+import com.osfans.trime.ui.dialogs.SchemaDialog2
 import com.osfans.trime.utils.Function
 import org.ocpsoft.prettytime.PrettyTime
 import java.util.*
