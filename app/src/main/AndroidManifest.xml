@@ -16,9 +16,12 @@
         android:icon="@drawable/icon"
         android:label="@string/ime_name"
         android:requestLegacyExternalStorage="true"
-        android:theme="@style/Theme.AppCompat.DayNight.DarkActionBar">
-        <activity android:name=".ui.HelpNFeedbackActivity" />
-        <activity android:name=".ui.AboutActivity" />
+        android:theme="@style/PreferenceTheme">
+        <activity
+            android:name=".ui.HelpNFeedbackActivity"
+            android:theme="@style/PreferenceTheme"/>
+        <activity android:name=".ui.AboutActivity"
+            android:theme="@style/PreferenceTheme"/>
 
         <service
             android:name=".ime.Trime"
@@ -36,7 +39,7 @@
         <activity
             android:name=".ui.PrefActivity"
             android:label="@string/ime_name"
-            android:theme="@style/Theme.AppCompat.DayNight.DarkActionBar">
+            android:theme="@style/PreferenceTheme">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
 

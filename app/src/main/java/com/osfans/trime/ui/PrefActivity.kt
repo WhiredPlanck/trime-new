@@ -14,6 +14,7 @@ import android.view.Menu
 import android.view.MenuItem
 import android.view.inputmethod.InputMethodManager
 import androidx.appcompat.app.AppCompatActivity
+import androidx.appcompat.widget.Toolbar
 import androidx.preference.Preference
 import androidx.preference.PreferenceFragmentCompat
 import com.osfans.trime.R
@@ -30,6 +31,8 @@ class PrefActivity : AppCompatActivity(),
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.pref_activity)
+        val toolbar = findViewById<Toolbar>(R.id.toolbar)
+        setSupportActionBar(toolbar)
 
         imm = getSystemService(Context.INPUT_METHOD_SERVICE) as InputMethodManager
 
@@ -46,8 +49,11 @@ class PrefActivity : AppCompatActivity(),
                 setTitle(R.string.ime_name)
             }
         }
+
         supportActionBar?.setDisplayHomeAsUpEnabled(true)
-        requestPermissionsForApp()
+        if ( Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
+            requestPermissionsForApp()
+        }
     }
 
     override fun onSaveInstanceState(outState: Bundle) {

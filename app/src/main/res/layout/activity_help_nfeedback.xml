@@ -1,10 +1,18 @@
 <?xml version="1.0" encoding="utf-8"?>
-<androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
-    xmlns:app="http://schemas.android.com/apk/res-auto"
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:tools="http://schemas.android.com/tools"
-    android:id="@+id/settings__help_and_feedback"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    tools:context=".ui.HelpNFeedbackActivity">
+    android:orientation="vertical">
 
-</androidx.constraintlayout.widget.ConstraintLayout>
+    <include layout="@layout/toolbar" />
+
+    <FrameLayout
+        android:id="@+id/settings__help_and_feedback"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:orientation="vertical"
+        tools:context=".ui.HelpNFeedbackActivity">
+    </FrameLayout>
+
+</LinearLayout>
