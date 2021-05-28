@@ -18,11 +18,30 @@ import com.osfans.trime.R
 import java.util.*
 import kotlin.properties.Delegates
 
+/**
+ * Custom preference which represents a seek bar which shows the current value in the summary. The
+ * value can be changed by clicking on the preference, which brings up a dialog which a seek bar.
+ * This implementation also allows for a min / max step value, while being backwards compatible.
+ *
+ * @see R.styleable.SeekBarDialogPreferenceAttrs for which xml attributes this preference accepts
+ *  besides the default Preference attributes.
+ *
+ * @property defaultValue The default value of this preference.
+ * @property mMinValue The minimum value of the seek bar. Must not be greater or equal than [max].
+ * @property max The maximum value of the seek bar. Must not be lesser or equal than [min].
+ * @property mUnit The unit to show after the value. Set to an empty string to disable this feature.
+ *
+ * This class is inspired by the DialogSeekBarPreference.kt in project
+ * @sample [florisboard](https://github.com/florisboard/florisboard)
+ */
 
 class SeekBarDialogPreference : Preference {
-    private var mMaxValue by Delegates.notNull<Int>()
+    private var mMinValue : Int = 0
+    private var mMaxValue : Int = 100
     private var defaultValue: Int = 0
-    private val mStep: Int = 10
+    private var mStep: Int = 1
+    private var mUnit: String = ""
+
 
     @Suppress("unused")
     constructor(context: Context): this(context, null)
@@ -30,14 +49,16 @@ class SeekBarDialogPreference : Preference {
     constructor(context: Context, attrs: AttributeSet?, defStyleAttr: Int): super(context, attrs, defStyleAttr) {
         //context.obtainStyledAttributes(attrs, intArrayOf(android.R.attr.max)).apply {
         context.obtainStyledAttributes(attrs, R.styleable.SeekBarDialogPreferenceAttrs).apply {
-            mMaxValue = getInt(R.styleable.SeekBarDialogPreferenceAttrs_max, 100)
-            defaultValue = seekBarProgressToActualValue(getInt(R.styleable.SeekBarDialogPreferenceAttrs_android_defaultValue,0))
+            mMaxValue = getInt(R.styleable.SeekBarDialogPreferenceAttrs_max, mMaxValue)
+            mMinValue = getInt(R.styleable.SeekBarDialogPreferenceAttrs_min, mMinValue)
+            defaultValue = getInt(R.styleable.SeekBarDialogPreferenceAttrs_android_defaultValue, defaultValue)
+            mUnit = getString(R.styleable.SeekBarDialogPreferenceAttrs_unit) ?: mUnit
             Log.d("mMaxValue of $key", mMaxValue.toString())
             Log.d("defaultValue of $key", defaultValue.toString())
             recycle()
         }
         onPreferenceChangeListener = OnPreferenceChangeListener { _, newValue ->
-            summary = getTextForValue(seekBarProgressToActualValue(newValue as Int))
+            summary = getTextForValue(newValue.toString())
             true
         }
         onPreferenceClickListener = OnPreferenceClickListener {
@@ -52,16 +73,23 @@ class SeekBarDialogPreference : Preference {
     }
 
     private fun getTextForValue(value: Any): CharSequence {
+        if (value !is Int) {
+            return "??$mUnit"
+        }
+        /*
         val unit = when (key) {
             "longpress_timeout",
             "key_vibrate_duration",
             "repeat_interval" -> "ms"
             "key_vibrate_amplitude" -> ""
             else ->  "%"
-        }
-        return "$value $unit"
+        } */
+        return value.toString() + mUnit
     }
 
+    /**
+     * Show the seek bar dialog.
+     */
     @SuppressLint("InflateParams")
     private fun showSeekBarDialog() {
         val inflater = context.getSystemService(Context.LAYOUT_INFLATER_SERVICE) as LayoutInflater
@@ -70,7 +98,7 @@ class SeekBarDialogPreference : Preference {
         val seekBar = dialogView.findViewById<SeekBar>(R.id.seekbar)
         val valueView = dialogView.findViewById<TextView>(R.id.value)
         seekBar.apply {
-            max = mMaxValue
+            max = actualValueToSeekBarProgress(mMaxValue)
             progress = actualValueToSeekBarProgress(initValue)
             Log.d("seekBar_max", max.toString())
             setOnSeekBarChangeListener(object : SeekBar.OnSeekBarChangeListener {
@@ -111,6 +139,7 @@ class SeekBarDialogPreference : Preference {
     }
 
     private fun actualValueToSeekBarProgress(actual: Int): Int {
+        /*
         return when (key) {
             "longpress_timeout", "key_vibrate_duration" -> {
                 (actual - 100) / mStep
@@ -119,10 +148,12 @@ class SeekBarDialogPreference : Preference {
                 (actual - 10) / mStep
             }
             else -> actual
-        }
+        } */
+        return (actual - mMinValue) / mStep
     }
 
     private fun seekBarProgressToActualValue(progress: Int): Int {
+        /*
         return when (key) {
             "longpress_timeout" -> {
                 (progress * mStep) + 100 // 100 is a min value for "longpress_timeout"
@@ -131,6 +162,7 @@ class SeekBarDialogPreference : Preference {
                 (progress * mStep) + 10 // 10 is a min value for "repeat_interval"
             }
             else -> progress
-        }
+        } */
+        return (progress * mStep) + mMinValue
     }
 }

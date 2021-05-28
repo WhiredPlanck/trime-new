@@ -47,6 +47,8 @@
             android:key="key_sound_volume"
             android:title="@string/key_sound_volume"
             app:max="100"
+            app:min="0"
+            app:unit="%"
             android:defaultValue="100"
             android:dependency="key_sound" />
 
@@ -57,12 +59,15 @@
             android:key="key_vibrate_duration"
             android:title="@string/key_vibrate_duration"
             app:max="100"
+            app:min="0"
+            app:unit="ms"
             android:defaultValue="10"
             android:dependency="key_vibrate"/>
         <com.osfans.trime.ui.components.SeekBarDialogPreference
             android:key="key_vibrate_amplitude"
             android:title="@string/key_vibrate_amplitude"
             app:max="255"
+            app:min="0"
             android:defaultValue="0"
             android:dependency="key_vibrate"/>
     <!--        <SwitchPreference android:key="key_vibrate_default_amplitude" android:title="@string/key_vibrate_default_amplitude"/>-->
@@ -72,11 +77,15 @@
             android:key="longpress_timeout"
             android:title="@string/longpress_timeout"
             app:max="60"
+            app:min="10"
+            app:unit="ms"
             android:defaultValue="20" />
         <com.osfans.trime.ui.components.SeekBarDialogPreference
             android:key="repeat_interval"
             android:title="@string/repeat_interval"
             app:max="9"
+            app:min="1"
+            app:unit="ms"
             android:defaultValue="4" />
     </PreferenceCategory>
 
