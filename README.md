@@ -4,9 +4,20 @@
 [![License: GPL v3](https://img.shields.io/badge/License-GPL%20v3-blue.svg)](https://www.gnu.org/licenses/gpl-3.0)
 
 ## 截图
-<img src="https://i.loli.net/2021/05/22/lP3eFWyndrc8R6a.png" alt="Screenshot_1621689856.png" style="zoom: 33%;" /> <img src="https://i.loli.net/2021/05/22/milrOUIzSdaPQgu.png" alt="Screenshot_1621689879.png" style="zoom:33%;" /> <img src="https://i.loli.net/2021/05/22/9PSi7pGI3MtjO8a.png" alt="Screenshot_1621689900.png" style="zoom:33%;" />
+### 日间
+
+<img src="https://i.loli.net/2021/05/29/jJnRm5bUahizZQX.png" alt="day1.png" style="zoom: 33%;" /> 
+<img src="https://i.loli.net/2021/05/29/XTBtb7NifqvHzLP.png" alt="day2.png" style="zoom: 33%;" /> 
+<img src="https://i.loli.net/2021/05/29/6Msh9xX5WFoyBNl.png" alt="day3.png" style="zoom: 33%;" /> 
+
+### 夜间
+
+<img src="https://i.loli.net/2021/05/29/e4MKhq1NSgzVZr2.png" alt="night1.png" style="zoom:33%;" />
+<img src="https://i.loli.net/2021/05/29/Pl2H6IqcYUtjWx9.png" alt="night2.png" style="zoom:33%;" />
+<img src="https://i.loli.net/2021/05/29/5aNBlWG9vmUEHyt.png" alt="night3.png" style="zoom:33%;" />
 
 ## 关于
+
 有关源项目的信息，请参阅[这里](https://github.com/osfans/trime#readme)。
 
 本项目基于原版同文输入法，对应用设置界面等利用 Kotlin 语言进行重写，并重新组织代码编写结构，
