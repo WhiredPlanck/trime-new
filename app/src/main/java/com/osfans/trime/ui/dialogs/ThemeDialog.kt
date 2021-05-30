@@ -15,7 +15,7 @@ import android.content.Context
 import android.util.Log
 import android.view.Window
 
-class ThemeDialog2: CoroutineScope {
+class ThemeDialog: CoroutineScope {
     private val job = Job()
     override val coroutineContext: CoroutineContext
         get() = Dispatchers.Main + job

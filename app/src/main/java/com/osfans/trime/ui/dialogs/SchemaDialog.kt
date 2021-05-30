@@ -19,10 +19,10 @@ import kotlin.collections.*
 import kotlin.coroutines.CoroutineContext
 import kotlin.system.exitProcess
 
-private val TITLE_TAG = SchemaDialog2::class.java.simpleName
+private val TITLE_TAG = SchemaDialog::class.java.simpleName
 
 /** Show the Schema List of Trime **/
-class SchemaDialog2: CoroutineScope {
+class SchemaDialog: CoroutineScope {
 
     private val job = Job()
     override val coroutineContext: CoroutineContext

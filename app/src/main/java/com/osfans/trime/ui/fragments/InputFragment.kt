@@ -13,7 +13,7 @@ import androidx.preference.SwitchPreference
 import com.osfans.trime.R
 import com.osfans.trime.ui.PrefActivity
 import com.osfans.trime.ui.dialogs.ResetDialog
-import com.osfans.trime.ui.dialogs.SchemaDialog2
+import com.osfans.trime.ui.dialogs.SchemaDialog
 import com.osfans.trime.utils.Function
 import org.ocpsoft.prettytime.PrettyTime
 import java.util.*
@@ -35,7 +35,7 @@ class InputFragment : PreferenceFragmentCompat() {
     override fun onPreferenceTreeClick(preference: Preference?): Boolean {
         return when (preference?.key) {
             "pref_schemas" -> {
-                context?.let { SchemaDialog2(it) }
+                context?.let { SchemaDialog(it) }
                 true
             }
             "pref_sync" -> {

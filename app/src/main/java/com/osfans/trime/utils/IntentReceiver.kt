@@ -9,10 +9,10 @@ import com.osfans.trime.ime.Rime
 import kotlin.system.exitProcess
 
 
-private val TITLE_TAG = IntentReceiver2::class.java.simpleName
+private val TITLE_TAG = IntentReceiver::class.java.simpleName
 
 /** Receive Intent Broadcast Event **/
-class IntentReceiver2: BroadcastReceiver() {
+class IntentReceiver: BroadcastReceiver() {
 
     private val COMMAND_DEPLOY = "com.osfans.trime.deploy"
     private val COMMAND_SYNC = "com.osfans.trime.sync"

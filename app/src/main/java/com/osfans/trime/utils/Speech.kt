@@ -12,12 +12,12 @@ import com.osfans.trime.R
 import com.osfans.trime.ime.Rime
 import com.osfans.trime.ime.Trime
 
-class Speech2(context: Context) : RecognitionListener {
+class Speech(context: Context) : RecognitionListener {
     private val TITLE_TAG = this::class.java.simpleName
     private val mContext = context
 
     private var speech: SpeechRecognizer = SpeechRecognizer.createSpeechRecognizer(context).apply {
-        setRecognitionListener(this@Speech2)
+        setRecognitionListener(this@Speech)
     }
     private var recognizerIntent: Intent = Intent(RecognizerIntent.ACTION_RECOGNIZE_SPEECH).apply {
         putExtra(RecognizerIntent.EXTRA_MAX_RESULTS, 1)

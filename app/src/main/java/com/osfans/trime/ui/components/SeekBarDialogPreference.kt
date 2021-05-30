@@ -27,8 +27,8 @@ import kotlin.properties.Delegates
  *  besides the default Preference attributes.
  *
  * @property defaultValue The default value of this preference.
- * @property mMinValue The minimum value of the seek bar. Must not be greater or equal than [max].
- * @property max The maximum value of the seek bar. Must not be lesser or equal than [min].
+ * @property mMinValue The minimum value of the seek bar. Must not be greater or equal than [mMaxValue].
+ * @property mMaxValue The maximum value of the seek bar. Must not be lesser or equal than [mMinValue].
  * @property mUnit The unit to show after the value. Set to an empty string to disable this feature.
  *
  * This class is inspired by the DialogSeekBarPreference.kt in project

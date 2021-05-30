@@ -8,7 +8,7 @@ import androidx.preference.PreferenceFragmentCompat
 import com.osfans.trime.ui.dialogs.ColorDialog
 import com.osfans.trime.R
 import com.osfans.trime.ime.Trime
-import com.osfans.trime.ui.dialogs.ThemeDialog2
+import com.osfans.trime.ui.dialogs.ThemeDialog
 
 class KeyboardFragment : PreferenceFragmentCompat(),
         SharedPreferences.OnSharedPreferenceChangeListener {
@@ -55,7 +55,7 @@ class KeyboardFragment : PreferenceFragmentCompat(),
     override fun onPreferenceTreeClick(preference: Preference?): Boolean {
         return when (preference?.key) {
             "pref_themes" -> {
-                context?.let { ThemeDialog2(it) }
+                context?.let { ThemeDialog(it) }
                 true
             }
             "pref_colors" -> {
