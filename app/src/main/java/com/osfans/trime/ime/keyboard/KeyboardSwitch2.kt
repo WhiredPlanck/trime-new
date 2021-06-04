@@ -1,7 +1,6 @@
 package com.osfans.trime.ime.keyboard
 
 import android.content.Context
-import com.osfans.trime.ime.Keyboard
 import com.osfans.trime.utils.Config
 
 /** Manage multiple {@link Keyboard}s **/
@@ -35,7 +34,10 @@ class KeyboardSwitch2(private val context: Context) {
         val n = mKeyboardNames.size
         mKeyboards = arrayOfNulls(n)
         for (i in mKeyboardNames.indices) {
-            mKeyboards[i] = Keyboard(context, mKeyboardNames[i])
+            mKeyboards[i] = Keyboard(
+                context,
+                mKeyboardNames[i]
+            )
         }
         setKeyboardById(0)
     }

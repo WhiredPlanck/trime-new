@@ -31,7 +31,7 @@ import android.graphics.drawable.GradientDrawable;
 import android.os.SystemClock;
 import android.util.TypedValue;
 
-import com.osfans.trime.ime.Key;
+import com.osfans.trime.ime.keyboard.Key;
 import com.osfans.trime.R;
 import com.osfans.trime.ime.Rime;
 import com.osfans.trime.enums.InlineModeType;

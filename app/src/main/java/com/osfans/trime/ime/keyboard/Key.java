@@ -15,13 +15,14 @@
  * You should have received a copy of the GNU General Public License
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
-package com.osfans.trime.ime;
+package com.osfans.trime.ime.keyboard;
 
 import android.content.Context;
 import android.graphics.drawable.Drawable;
 import android.view.KeyCharacterMap;
 import android.view.KeyEvent;
 
+import com.osfans.trime.ime.Rime;
 import com.osfans.trime.utils.Config;
 import com.osfans.trime.utils.Function;
 import com.osfans.trime.enums.KeyEventType;

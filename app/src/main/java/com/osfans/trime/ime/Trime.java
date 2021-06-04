@@ -990,7 +990,7 @@ public class Trime extends InputMethodService
   @Override
   public void onText(CharSequence text) { //軟鍵盤
     Log.info("onText=" + text);
-    mEffect.speakKey(text);
+    mEffect.speakKeyByText(text);
     String s = text.toString();
     String t;
     Pattern p = Pattern.compile("^(\\{[^{}]+\\}).*$");
@@ -1022,7 +1022,7 @@ public class Trime extends InputMethodService
   public void onPress(int keyCode) {
     mEffect.vibrate();
     mEffect.playSound(keyCode);
-    mEffect.speakKey(keyCode);
+    mEffect.speakKeyByCode(keyCode);
   }
 
   @Override

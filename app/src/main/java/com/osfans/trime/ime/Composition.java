@@ -38,6 +38,8 @@ import android.view.MotionEvent;
 import android.view.View;
 import android.widget.TextView;
 
+import com.osfans.trime.ime.candidate.CandidateView;
+import com.osfans.trime.ime.keyboard.Event;
 import com.osfans.trime.utils.Config;
 import com.osfans.trime.utils.Function;
 
