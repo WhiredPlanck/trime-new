@@ -16,7 +16,7 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-package com.osfans.trime.ime;
+package com.osfans.trime.ime.text;
 
 import android.content.Context;
 import android.graphics.Canvas;
@@ -26,10 +26,12 @@ import android.graphics.Typeface;
 import android.graphics.drawable.Drawable;
 import android.graphics.drawable.PaintDrawable;
 import android.util.AttributeSet;
+import android.util.Log;
 import android.view.MotionEvent;
 import android.view.View;
 import android.view.ViewGroup.LayoutParams;
 
+import com.osfans.trime.ime.Rime;
 import com.osfans.trime.utils.Config;
 import com.osfans.trime.utils.Function;
 
@@ -226,7 +228,7 @@ public class Candidate extends View {
     if (show_comment && comment_on_top) y += comment_height / 2;
     comment_y = comment_height / 2 - (paintComment.ascent() + paintComment.descent()) / 2;
     if (show_comment && !comment_on_top) comment_y += candidateRect[0].bottom - comment_height;
-
+    Log.d("CV", String.valueOf(num_candidates));
     while (i < num_candidates) {
       // Calculate a position where the text could be centered in the rectangle.
       x = candidateRect[i].centerX();

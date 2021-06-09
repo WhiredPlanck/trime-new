@@ -393,7 +393,7 @@ public class Trime extends InputMethodService
       mCandidate.reset(this);
       mShowWindow = mConfig.getShowWindow();
       mComposition.setVisibility(mShowWindow ? View.VISIBLE : View.GONE);
-      mComposition.reset(this);
+      mComposition.reset();
     }
   }
 
@@ -517,8 +517,10 @@ public class Trime extends InputMethodService
     mFloatingWindow = new PopupWindow(mCompositionContainer);
     mFloatingWindow.setClippingEnabled(false);
     mFloatingWindow.setInputMethodMode(PopupWindow.INPUT_METHOD_NOT_NEEDED);
-    mFloatingWindow.setWindowLayoutType(getDialogType());
-    mComposition = (Composition) mCompositionContainer.getChildAt(0);
+    if (VERSION.SDK_INT >= VERSION_CODES.M) {
+      mFloatingWindow.setWindowLayoutType(getDialogType());
+    }
+    mComposition = (CompositionView) mCompositionContainer.getChildAt(0);
 
     mCandidateContainer =
         (FrameLayout) inflater.inflate(R.layout.candidate_container, (ViewGroup) null);
