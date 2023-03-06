@@ -26,6 +26,7 @@
     <uses-permission android:name="android.permission.VIBRATE" />
     <uses-permission android:name="android.permission.READ_EXTERNAL_STORAGE" />
     <uses-permission android:name="android.permission.WRITE_EXTERNAL_STORAGE" />
+    <uses-permission android:name="android.permission.MANAGE_EXTERNAL_STORAGE" />
     <uses-permission android:name="android.permission.RECORD_AUDIO" />
 
     <application
@@ -64,6 +65,17 @@
             android:exported="false"
             android:launchMode="singleTask"
             android:parentActivityName=".ui.main.PrefMainActivity" />
+
+        <provider
+            android:name=".provider.TrimeSharedDataProvider"
+            android:authorities="${applicationId}.provider"
+            android:exported="true"
+            android:grantUriPermissions="true"
+            android:permission="android.permission.MANAGE_DOCUMENTS">
+            <intent-filter>
+                <action android:name="android.content.action.DOCUMENTS_PROVIDER" />
+            </intent-filter>
+        </provider>
 
         <!-- Using an activity alias to disable/enable the app icon in the launcher -->
         <activity-alias

@@ -4,6 +4,7 @@ project(trime-lib VERSION 3.0.0)
 
 set(ANDROID_STL c++_shared)
 set(CMAKE_CXX_STANDARD 14)
+set(CMAKE_BUILD_TYPE Release)
 
 set(CMAKE_MODULE_PATH "${CMAKE_CURRENT_SOURCE_DIR}/cmake" ${CMAKE_MODULE_PATH})
 

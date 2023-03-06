@@ -1,0 +1,105 @@
+name: Manually
+on: workflow_dispatch
+env:
+  CI_NAME: Commit CI
+jobs:
+  build:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout last commit
+        uses: actions/checkout@v3
+        with:
+          fetch-depth: 0
+
+      - name: Get branch name
+        id: vars
+        run: |
+          echo ${GITHUB_REF#refs/*/}
+          echo CI_BRANCH=${GITHUB_REF#refs/*/} >> $GITHUB_ENV
+
+      - name: Calculate JNI cache hash
+        id: cache-hash
+        run: script/cache-hash.sh
+
+      - name: Fetch JNI cache
+        uses: actions/cache@v3
+        id: jni-cache
+        with:
+          path: "app/prebuilt"
+          key: jni-release-${{ steps.cache-hash.outputs.hash }}
+
+      - name: Fetch submodules
+        if: ${{ !steps.jni-cache.outputs.cache-hit }}
+        run: |
+          git submodule update --init --recursive
+          
+          
+      - name: Decode keystore 
+        uses: timheuer/base64-to-file@v1.2
+        with:
+          fileName: 'keystore/test.jks'
+          fileDir: '/home/runner/work/_temp/'
+          encodedString: ${{ secrets.KEYSTORE }}
+          
+      - name: create keystore and properties file for signing the app   
+        run: |
+          echo "storeFile=/home/runner/work/_temp/keystore/test.jks" >> /home/runner/work/trime/trime/app/keystore.properties
+          echo "keyAlias=$SIGNING_KEY_ALIAS" >> /home/runner/work/trime/trime/app/keystore.properties
+          echo "storePassword=$SIGNING_STORE_PASSWORD" >> /home/runner/work/trime/trime/app/keystore.properties
+          echo "keyPassword=$SIGNING_KEY_PASSWORD" >> /home/runner/work/trime/trime/app/keystore.properties
+          ls /home/runner/work/trime/trime/app
+          cat /home/runner/work/trime/trime/app/keystore.properties
+          
+        env: 
+          SIGNING_KEY_ALIAS: ${{ secrets.SIGNING_KEY_ALIAS }}
+          SIGNING_KEY_PASSWORD: ${{ secrets.SIGNING_KEY_PASSWORD }}
+          SIGNING_STORE_PASSWORD: ${{ secrets.SIGNING_STORE_PASSWORD }}
+      
+      - name: Setup Java
+        uses: actions/setup-java@v3
+        with:
+          distribution: "temurin"
+          java-version: 17
+          # will restore cache of dependencies and wrappers
+          cache: 'gradle'
+
+      - name: Setup Android SDK
+        uses: android-actions/setup-android@v2
+
+      - name: Spotless code style check
+        run: make spotless
+
+      - name: Build Trime
+        run: make release
+        env:
+          SIGNING_KEY_ALIAS: ${{ secrets.SIGNING_KEY_ALIAS }}
+          SIGNING_KEY_PASSWORD: ${{ secrets.SIGNING_KEY_PASSWORD }}
+          SIGNING_STORE_PASSWORD: ${{ secrets.SIGNING_STORE_PASSWORD }}
+
+      - name: Add JNI cache
+        if: ${{ !steps.jni-cache.outputs.cache-hit }}
+        run: cp -R app/build/intermediates/stripped_native_libs/*/out/lib app/prebuilt
+
+      - name: Upload Trime artifact
+        uses: actions/upload-artifact@v3
+        with:
+          name: trime
+          path: app/build/outputs/apk/**/*.apk
+          # keep 90 days
+          retention-days: 90
+
+      - name: Upload Trime artifact (ARM64_V8A only)
+        uses: actions/upload-artifact@v3
+        with:
+          name: trime_arm64_v8a
+          path: app/build/outputs/apk/**/*arm64-v8a-*.apk
+          # keep 90 days
+          retention-days: 90
+
+      - name: Upload jni artifact (librime_jni.so)
+        uses: actions/upload-artifact@v3
+        with:
+          name: librime_jni
+          path: app/build/intermediates/stripped_native_libs/*/out/lib/*
+          # keep 90 days
+          retention-days: 90

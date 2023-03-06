@@ -61,15 +61,21 @@ fun buildInfo(): String {
     println(info)
     return info
 }
-
+val keyPropFile = rootProject.file("keystore.properties")
+val props = if (keyPropFile.exists()) {
+  Properties().apply { load(keyPropFile.inputStream()) }
+} else {
+   null
+   }
+   
 android {
     compileSdk = 33
     ndkVersion = "24.0.8215888"
 
     defaultConfig {
         applicationId  = "com.osfans.trime"
-        minSdk = 21
-        targetSdk =  29
+        minSdk = 29
+        targetSdk =  31
         versionCode = 20230301
         versionName = "3.2.11"
 
@@ -83,16 +89,18 @@ android {
 
     signingConfigs {
         create("release") {
-            val keyPropFile = rootProject.file("keystore.properties")
-            if (keyPropFile.exists()) {
-                val props = Properties()
-                props.load(keyPropFile.inputStream())
-
-                storeFile = rootProject.file(props["storeFile"]!!)
+            if (props != null && props.contains("storeFile")) {
+                storeFile = file((props["storeFile"] as? String) ?: "none")
                 storePassword = props["storePassword"] as? String
                 keyAlias = props["keyAlias"] as? String
                 keyPassword = props["keyPassword"] as? String
             }
+            
+          keyAlias = System.getenv("SIGNING_KEY_ALIAS")
+          keyPassword = System.getenv("SIGNING_STORE_PASSWORD")
+          storeFile = file("/home/runner/work/_temp/keystore/test.jks")
+          storePassword = System.getenv("SIGNING_KEY_PASSWORD")
+            
         }
     }
 
@@ -197,7 +205,7 @@ dependencies {
     implementation("com.blankj:utilcodex:1.31.1")
     implementation("com.jakewharton.timber:timber:5.0.1")
     implementation("cat.ereza:customactivityoncrash:2.4.0")
-    implementation("com.github.getActivity:XXPermissions:16.2")
+    implementation("com.github.getActivity:XXPermissions:16.6")
     implementation("com.charleskorn.kaml:kaml:0.49.0")
     implementation("androidx.core:core-ktx:1.9.0")
     implementation("androidx.appcompat:appcompat:1.5.1")

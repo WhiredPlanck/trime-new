@@ -14,7 +14,7 @@ build:
 	./gradlew build
 
 TRANSLATE=$(resDir)/values-zh-rCN/strings.xml
-release: opencc-data spotless
+release: # opencc-data spotless 
 	./gradlew assembleRelease
 
 spotless:
