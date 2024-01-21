@@ -1,17 +1,20 @@
-name: Release
+name: Nightly
 on:
-  push:
-    tags:
-      - '*'
+  workflow_dispatch:
+  schedule:
+    - cron: '15 11 * * *' # UTC 3:00 daily
+
 env:
-  CI_NAME: Release CI
+  CI_NAME: Nightly CI
 jobs:
   build:
+    if: ${{ github.repository == 'WhiredPlanck/trime-new' }}
     runs-on: ubuntu-latest
     steps:
       - name: Checkout
         uses: actions/checkout@v4
         with:
+          submodules: recursive
           fetch-depth: 0
 
       - name: Setup Java
@@ -54,26 +57,12 @@ jobs:
         if: ${{ !steps.jni-cache.outputs.cache-hit }}
         run: cp -R app/build/intermediates/stripped_native_libs/release/out/lib app/prebuilt
 
-      - name: Build changelog
-        id: build_changelog
-        uses: mikepenz/release-changelog-builder-action@v4
+      - name: Create Nightly release
+        uses: 'marvinpinto/action-automatic-releases@latest'
         with:
-          commitMode: true
-          configurationJson: |
-            {
-              "template": "Change log from #{{FROM_TAG}} to #{{TO_TAG}}: #{{RELEASE_DIFF}}\n#{{UNCATEGORIZED}}",
-              "pr_template": "- [#{{MERGE_SHA}}] - #{{TITLE}}"
-            }
-        env:
-          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
-
-      - name: Create Stable release
-        if: ${{ github.ref != 'refs/heads/develop' }}
-        uses: ncipollo/release-action@v1
-        with:
-          allowUpdates: true
-          prerelease: ${{ contains(github.ref_name, 'alpha') || contains(github.ref_name, 'beta') }}
-          artifacts: "app/build/outputs/apk/release/*.apk"
-          body: |
-            ${{ steps.build_changelog.outputs.changelog }}
-          token: ${{ secrets.GITHUB_TOKEN }}
+          repo_token: ${{ secrets.GITHUB_TOKEN }}
+          automatic_release_tag: nightly
+          prerelease: true
+          title: "Nightly Build"
+          files: |
+            app/build/outputs/apk/release/*.apk
