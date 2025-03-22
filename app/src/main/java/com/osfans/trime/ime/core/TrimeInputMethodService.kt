@@ -626,6 +626,15 @@ open class TrimeInputMethodService : LifecycleInputMethodService() {
                     KeyEvent.KEYCODE_ENTER -> {
                         handleReturnKey()
                     }
+                    KeyEvent.KEYCODE_DPAD_DOWN,
+                    KeyEvent.KEYCODE_DPAD_LEFT,
+                    KeyEvent.KEYCODE_DPAD_RIGHT,
+                    KeyEvent.KEYCODE_DPAD_UP,
+                    KeyEvent.KEYCODE_MOVE_END,
+                    KeyEvent.KEYCODE_MOVE_HOME,
+                    -> {
+                        sendDownUpKeyEvent(keyCode)
+                    }
                     else -> {
                         if (key.isNotEmpty()) {
                             currentInputConnection?.commitText(key, 1)
