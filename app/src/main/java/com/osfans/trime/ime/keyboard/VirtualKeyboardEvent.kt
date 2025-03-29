@@ -49,6 +49,22 @@ sealed class VirtualKeyboardEvent {
     data object PasteEvent : VirtualKeyboardEvent()
 
     @Serializable
+    @SerialName("COLLAPSE")
+    data object CollapseEvent : VirtualKeyboardEvent()
+
+    @Serializable
+    @SerialName("SELECT")
+    data object SelectEvent : VirtualKeyboardEvent()
+
+    @Serializable
+    @SerialName("DESELECT")
+    data object DeselectEvent : VirtualKeyboardEvent()
+
+    @Serializable
+    @SerialName("SELECT_ALL")
+    data object SelectAllEvent : VirtualKeyboardEvent()
+
+    @Serializable
     @SerialName("SELECT_CANDIDATE")
     data class SelectCandidateEvent(
         val data: Int,

@@ -9,6 +9,7 @@ import android.view.KeyEvent
 import android.view.View
 import android.view.WindowInsets
 import android.view.inputmethod.EditorInfo
+import android.view.inputmethod.InputMethodManager
 import android.webkit.WebView
 import androidx.core.view.ViewCompat
 import androidx.core.view.updateLayoutParams
@@ -21,6 +22,7 @@ import com.osfans.trime.daemon.launchOnReady
 import com.osfans.trime.data.theme.Theme
 import com.osfans.trime.ime.keyboard.KeyCode
 import com.osfans.trime.ime.keyboard.VirtualKeyboardEvent
+import kotlinx.serialization.encodeToString
 import kotlinx.serialization.json.Json
 import splitties.bitflags.hasFlag
 import splitties.views.dsl.constraintlayout.above
@@ -115,6 +117,9 @@ class InputView(
                     it.selectCandidate(event.data)
                 }
             }
+            is VirtualKeyboardEvent.CollapseEvent -> {
+                service.requestHideSelf(InputMethodManager.HIDE_NOT_ALWAYS)
+            }
             is VirtualKeyboardEvent.UndoEvent -> {
                 service.run { sendDownUpKeyEvent(KeyEvent.KEYCODE_Z, meta(ctrl = true)) }
             }
@@ -136,8 +141,12 @@ class InputView(
 
     private fun sendEvent(event: SystemEvent) {
         if (WebViewFeature.isFeatureSupported(WebViewFeature.WEB_MESSAGE_PORT_POST_MESSAGE)) {
-            port?.postMessage(WebMessageCompat(Json.encodeToString(SystemEvent.serializer(), event)))
-                ?: { pendingEvents.add(event) }
+            if (port != null) {
+                val message = WebMessageCompat(Json.encodeToString<SystemEvent>(event))
+                port?.postMessage(message)
+            } else {
+                pendingEvents.add(event)
+            }
         }
     }
 
@@ -196,6 +205,10 @@ class InputView(
                 }
             else -> {}
         }
+    }
+
+    fun onWindowHidden() {
+        sendEvent(SystemEvent.HideEvent)
     }
 
     fun updateSelection(

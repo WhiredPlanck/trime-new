@@ -17,7 +17,7 @@ object KeyCode {
             "Backspace" to KeyEvent.KEYCODE_DEL,
             "End" to KeyEvent.KEYCODE_MOVE_END,
             "Enter" to KeyEvent.KEYCODE_ENTER,
-            "Home" to KeyEvent.KEYCODE_MOVE_HOME
+            "Home" to KeyEvent.KEYCODE_MOVE_HOME,
         )
 
     fun convertCode(jsCode: String): Int = jsCodeMap[jsCode] ?: KeyEvent.KEYCODE_UNKNOWN

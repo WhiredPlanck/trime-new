@@ -283,6 +283,11 @@ open class TrimeInputMethodService : LifecycleInputMethodService() {
         navBarManager.update(window.window!!)
     }
 
+    override fun onWindowHidden() {
+        super.onWindowHidden()
+        inputView?.onWindowHidden()
+    }
+
     private val contentSize = floatArrayOf(0f, 0f)
     private val decorLocation = floatArrayOf(0f, 0f)
     private val decorLocationInt = intArrayOf(0, 0)

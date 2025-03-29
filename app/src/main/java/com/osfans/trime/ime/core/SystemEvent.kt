@@ -26,6 +26,14 @@ sealed class SystemEvent {
     data object HideEvent : SystemEvent()
 
     @Serializable
+    @SerialName("SELECT")
+    data object SelectEvent : SystemEvent()
+
+    @Serializable
+    @SerialName("DESELECT")
+    data object DeselectEvent : SystemEvent()
+
+    @Serializable
     @SerialName("CANDIDATES")
     data class CandidatesEvent(
         val data: Data,
