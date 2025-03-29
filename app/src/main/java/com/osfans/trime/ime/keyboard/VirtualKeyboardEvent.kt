@@ -53,6 +53,12 @@ sealed class VirtualKeyboardEvent {
     data object CollapseEvent : VirtualKeyboardEvent()
 
     @Serializable
+    @SerialName("COMMIT")
+    data class CommitEvent(
+        val data: String,
+    ) : VirtualKeyboardEvent()
+
+    @Serializable
     @SerialName("SELECT")
     data object SelectEvent : VirtualKeyboardEvent()
 

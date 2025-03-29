@@ -8,6 +8,7 @@ package com.osfans.trime.ime.core
 import android.view.KeyEvent
 import android.view.inputmethod.EditorInfo
 import android.view.inputmethod.InputMethodManager
+import androidx.lifecycle.lifecycleScope
 import androidx.webkit.WebMessageCompat
 import androidx.webkit.WebMessagePortCompat
 import androidx.webkit.WebViewFeature
@@ -16,6 +17,7 @@ import com.osfans.trime.daemon.RimeSession
 import com.osfans.trime.daemon.launchOnReady
 import com.osfans.trime.ime.keyboard.KeyCode
 import com.osfans.trime.ime.keyboard.VirtualKeyboardEvent
+import kotlinx.coroutines.launch
 import kotlinx.serialization.encodeToString
 import kotlinx.serialization.json.Json
 import splitties.bitflags.hasFlag
@@ -128,6 +130,12 @@ class InputViewComponent(
             }
             is VirtualKeyboardEvent.CollapseEvent -> {
                 service.requestHideSelf(InputMethodManager.HIDE_NOT_ALWAYS)
+            }
+            is VirtualKeyboardEvent.CommitEvent -> {
+                service.postRimeJob {
+                    clearComposition()
+                    service.lifecycleScope.launch { service.commitText(event.data) }
+                }
             }
             is VirtualKeyboardEvent.UndoEvent -> {
                 service.run { sendDownUpKeyEvent(KeyEvent.KEYCODE_Z, meta(ctrl = true)) }
