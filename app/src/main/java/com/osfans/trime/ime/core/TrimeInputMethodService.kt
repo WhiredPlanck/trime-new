@@ -248,7 +248,7 @@ open class TrimeInputMethodService : LifecycleInputMethodService() {
         RimeDaemon.destroySession(javaClass.name)
     }
 
-    private fun handleReturnKey() {
+    fun handleReturnKey() {
         currentInputEditorInfo.run {
             if (inputType and InputType.TYPE_MASK_CLASS == InputType.TYPE_NULL) {
                 sendDownUpKeyEvents(KeyEvent.KEYCODE_ENTER)
@@ -615,39 +615,6 @@ open class TrimeInputMethodService : LifecycleInputMethodService() {
             sendUpKeyEvent(eventTime, KeyEvent.KEYCODE_ALT_LEFT)
         }
         return true
-    }
-
-    fun handleKey(
-        key: String,
-        keyCode: Int,
-    ) {
-        postRimeJob {
-            val value = if (key.isNotEmpty()) key.codePointAt(0) else RimeKeyMapping.keyCodeToVal(keyCode)
-            if (!processKey(value, 0u)) {
-                when (keyCode) {
-                    KeyEvent.KEYCODE_DEL -> {
-                        sendDownUpKeyEvent(KeyEvent.KEYCODE_DEL)
-                    }
-                    KeyEvent.KEYCODE_ENTER -> {
-                        handleReturnKey()
-                    }
-                    KeyEvent.KEYCODE_DPAD_DOWN,
-                    KeyEvent.KEYCODE_DPAD_LEFT,
-                    KeyEvent.KEYCODE_DPAD_RIGHT,
-                    KeyEvent.KEYCODE_DPAD_UP,
-                    KeyEvent.KEYCODE_MOVE_END,
-                    KeyEvent.KEYCODE_MOVE_HOME,
-                    -> {
-                        sendDownUpKeyEvent(keyCode)
-                    }
-                    else -> {
-                        if (key.isNotEmpty()) {
-                            currentInputConnection?.commitText(key, 1)
-                        }
-                    }
-                }
-            }
-        }
     }
 
     private fun forwardKeyEvent(event: KeyEvent): Boolean {

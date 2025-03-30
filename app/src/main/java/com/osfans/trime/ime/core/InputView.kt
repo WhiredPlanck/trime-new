@@ -5,26 +5,18 @@
 package com.osfans.trime.ime.core
 
 import android.annotation.SuppressLint
-import android.view.KeyEvent
+import android.os.Build
 import android.view.View
 import android.view.WindowInsets
 import android.view.inputmethod.EditorInfo
-import android.view.inputmethod.InputMethodManager
 import android.webkit.WebView
 import androidx.core.view.ViewCompat
 import androidx.core.view.updateLayoutParams
-import androidx.webkit.WebMessageCompat
-import androidx.webkit.WebMessagePortCompat
-import androidx.webkit.WebViewFeature
 import com.osfans.trime.core.RimeMessage
 import com.osfans.trime.daemon.RimeSession
-import com.osfans.trime.daemon.launchOnReady
 import com.osfans.trime.data.theme.Theme
-import com.osfans.trime.ime.keyboard.KeyCode
 import com.osfans.trime.ime.keyboard.VirtualKeyboardEvent
-import kotlinx.serialization.encodeToString
 import kotlinx.serialization.json.Json
-import splitties.bitflags.hasFlag
 import splitties.views.dsl.constraintlayout.above
 import splitties.views.dsl.constraintlayout.bottomOfParent
 import splitties.views.dsl.constraintlayout.centerHorizontally
@@ -45,8 +37,7 @@ class InputView(
     rime: RimeSession,
     theme: Theme,
 ) : BaseInputView(service, rime, theme) {
-    private var port: WebMessagePortCompat? = null
-    private val pendingEvents: ArrayList<SystemEvent> = arrayListOf()
+    private val inputViewComponent = InputViewComponent(service, rime)
 
     private val bottomPaddingSpace =
         view(::View) {
@@ -107,69 +98,6 @@ class InputView(
         )
     }
 
-    private fun handleVirtualKeyboardEvent(event: VirtualKeyboardEvent) {
-        when (event) {
-            is VirtualKeyboardEvent.KeyDownEvent -> {
-                service.handleKey(event.data.key, KeyCode.convertCode(event.data.code))
-            }
-            is VirtualKeyboardEvent.SelectCandidateEvent -> {
-                rime.launchOnReady {
-                    it.selectCandidate(event.data)
-                }
-            }
-            is VirtualKeyboardEvent.CollapseEvent -> {
-                service.requestHideSelf(InputMethodManager.HIDE_NOT_ALWAYS)
-            }
-            is VirtualKeyboardEvent.UndoEvent -> {
-                service.run { sendDownUpKeyEvent(KeyEvent.KEYCODE_Z, meta(ctrl = true)) }
-            }
-            is VirtualKeyboardEvent.RedoEvent -> {
-                service.run { sendDownUpKeyEvent(KeyEvent.KEYCODE_Z, meta(ctrl = true, shift = true)) }
-            }
-            is VirtualKeyboardEvent.CutEvent -> {
-                service.currentInputConnection?.performContextMenuAction(android.R.id.cut)
-            }
-            is VirtualKeyboardEvent.CopyEvent -> {
-                service.currentInputConnection?.performContextMenuAction(android.R.id.copy)
-            }
-            is VirtualKeyboardEvent.PasteEvent -> {
-                service.currentInputConnection?.performContextMenuAction(android.R.id.paste)
-            }
-            else -> {}
-        }
-    }
-
-    private fun sendEvent(event: SystemEvent) {
-        if (WebViewFeature.isFeatureSupported(WebViewFeature.WEB_MESSAGE_PORT_POST_MESSAGE)) {
-            if (port != null) {
-                val message = WebMessageCompat(Json.encodeToString<SystemEvent>(event))
-                port?.postMessage(message)
-            } else {
-                pendingEvents.add(event)
-            }
-        }
-    }
-
-    private fun labelFromEditorInfo(info: EditorInfo): String {
-        if (info.imeOptions.hasFlag(EditorInfo.IME_FLAG_NO_ENTER_ACTION)) {
-            return ""
-        }
-        return when (info.imeOptions and EditorInfo.IME_MASK_ACTION) {
-            EditorInfo.IME_ACTION_GO -> "go"
-            EditorInfo.IME_ACTION_SEARCH -> "search"
-            EditorInfo.IME_ACTION_SEND -> "send"
-            EditorInfo.IME_ACTION_NEXT -> "next"
-            EditorInfo.IME_ACTION_DONE -> "down"
-            EditorInfo.IME_ACTION_PREVIOUS -> "previous"
-            else -> ""
-        }
-    }
-
-    private fun updateEnterKeyType(info: EditorInfo) {
-        val label = labelFromEditorInfo(info)
-        sendEvent(SystemEvent.EnterKeyTypeEvent(label))
-    }
-
     override fun onApplyWindowInsets(insets: WindowInsets): WindowInsets {
         bottomPaddingSpace.updateLayoutParams<LayoutParams> {
             bottomMargin = getNavBarBottomInset(insets)
@@ -181,7 +109,7 @@ class InputView(
         info: EditorInfo,
         restarting: Boolean = false,
     ) {
-        updateEnterKeyType(info)
+        inputViewComponent.updateEnterKeyType(info)
     }
 
     override fun handleRimeMessage(it: RimeMessage<*>) {
@@ -201,14 +129,14 @@ class InputView(
                         } else {
                             SystemEvent.ClearEvent
                         }
-                    sendEvent(event)
+                    inputViewComponent.sendEvent(event)
                 }
             else -> {}
         }
     }
 
     fun onWindowHidden() {
-        sendEvent(SystemEvent.HideEvent)
+        inputViewComponent.sendEvent(SystemEvent.HideEvent)
     }
 
     fun updateSelection(
