@@ -143,7 +143,7 @@ class InputView(
         start: Int,
         end: Int,
     ) {
-        // TODO
+        inputViewComponent.onSelectionUpdate(start, end)
     }
 
     override fun onDetachedFromWindow() {

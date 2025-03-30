@@ -27,6 +27,9 @@ class InputViewComponent(
     private var port: WebMessagePortCompat? = null
     private val pendingEvents: ArrayList<SystemEvent> = arrayListOf()
 
+    private var hasSelection = false
+    private var userSelection = false
+
     fun setPort(port: WebMessagePortCompat?) {
         this.port = port
         pendingEvents.forEach { sendEvent(it) }
@@ -64,6 +67,22 @@ class InputViewComponent(
         sendEvent(SystemEvent.EnterKeyTypeEvent(label))
     }
 
+    fun onSelectionUpdate(
+        start: Int,
+        end: Int,
+    ) {
+        hasSelection = start != end
+        updateSelection()
+    }
+
+    private fun updateSelection() {
+        sendEvent(if (hasSelection || userSelection) SystemEvent.SelectEvent else SystemEvent.DeselectEvent)
+    }
+
+    private fun sendDirectionKey(keyEventCode: Int) {
+        service.run { sendDownUpKeyEvent(keyEventCode, meta(shift = (hasSelection || userSelection))) }
+    }
+
     private fun handleKey(
         key: String,
         keyCode: Int,
@@ -85,7 +104,7 @@ class InputViewComponent(
                     KeyEvent.KEYCODE_MOVE_END,
                     KeyEvent.KEYCODE_MOVE_HOME,
                     -> {
-                        service.sendDownUpKeyEvent(keyCode)
+                        sendDirectionKey(keyCode)
                     }
                     else -> {
                         if (key.isNotEmpty()) {
@@ -117,13 +136,32 @@ class InputViewComponent(
                 service.run { sendDownUpKeyEvent(KeyEvent.KEYCODE_Z, meta(ctrl = true, shift = true)) }
             }
             is VirtualKeyboardEvent.CutEvent -> {
+                userSelection = false
                 service.currentInputConnection?.performContextMenuAction(android.R.id.cut)
             }
             is VirtualKeyboardEvent.CopyEvent -> {
+                userSelection = false
                 service.currentInputConnection?.performContextMenuAction(android.R.id.copy)
             }
             is VirtualKeyboardEvent.PasteEvent -> {
+                userSelection = false
                 service.currentInputConnection?.performContextMenuAction(android.R.id.paste)
+            }
+            is VirtualKeyboardEvent.SelectEvent -> {
+                if (hasSelection) {
+                    userSelection = false
+                    service.cancelSelection()
+                } else {
+                    userSelection = !userSelection
+                    updateSelection()
+                }
+            }
+            is VirtualKeyboardEvent.SelectAllEvent -> {
+                userSelection = true
+                service.currentInputConnection?.performContextMenuAction(android.R.id.selectAll)
+            }
+            is VirtualKeyboardEvent.DeselectEvent -> {
+                userSelection = false
             }
             else -> {}
         }

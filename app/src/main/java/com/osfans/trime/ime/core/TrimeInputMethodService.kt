@@ -82,6 +82,7 @@ open class TrimeInputMethodService : LifecycleInputMethodService() {
             val w = window.window ?: return@onChange
             navBarManager.evaluate(w, useVirtualKeyboard = it)
         }
+    private val selection = intArrayOf(0, 0)
     private val rimeIntentReceiver = RimeIntentReceiver()
 
     var lastCommittedText: CharSequence = ""
@@ -358,14 +359,9 @@ open class TrimeInputMethodService : LifecycleInputMethodService() {
         candidatesStart: Int,
         candidatesEnd: Int,
     ) {
-        super.onUpdateSelection(
-            oldSelStart,
-            oldSelEnd,
-            newSelStart,
-            newSelEnd,
-            candidatesStart,
-            candidatesEnd,
-        )
+        Timber.d("onUpdateSelection: old=[$oldSelStart, $oldSelEnd], new=[$newSelStart, $newSelEnd]")
+        selection[0] = newSelStart
+        selection[1] = newSelEnd
         if (candidatesEnd != -1 && (newSelStart != candidatesEnd || newSelEnd != candidatesEnd)) {
             // 移動光標時，更新候選區
             if (newSelEnd in candidatesStart..<candidatesEnd) {
@@ -706,6 +702,15 @@ open class TrimeInputMethodService : LifecycleInputMethodService() {
         if (ic.getSelectedText(0).isNullOrEmpty() || text.isNotEmpty()) {
             ic.setComposingText(text, 1)
         }
+    }
+
+    fun cancelSelection() {
+        val lastSelection = selection
+        if (lastSelection[0] == lastSelection[1]) return
+        val end = lastSelection[1]
+        selection[0] = end
+        selection[1] = end
+        currentInputConnection?.setSelection(end, end)
     }
 
     private fun getTextAroundCursor(
