@@ -4,6 +4,7 @@
 
 package com.osfans.trime.core
 
+import com.osfans.trime.util.HtmlEscapedStringSerializer
 import kotlinx.serialization.Serializable
 
 class RimeProto {
@@ -13,8 +14,11 @@ class RimeProto {
 
     @Serializable
     data class Candidate(
+        @Serializable(with = HtmlEscapedStringSerializer::class)
         val text: String,
+        @Serializable(with = HtmlEscapedStringSerializer::class)
         val comment: String,
+        @Serializable(with = HtmlEscapedStringSerializer::class)
         val label: String,
     )
 
