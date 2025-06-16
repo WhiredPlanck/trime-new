@@ -45,8 +45,6 @@ SPDX-License-Identifier: GPL-3.0-or-later
     <string name="speak_key_commit">上屏時朗讀字符</string>
     <string name="keyboard__long_press_timeout_title">長按按鍵的延遲時間</string>
     <string name="keyboard__key_repeat_interval_title">重複按鍵的重複間隔</string>
-    <string name="show_schema_switches_in_idle">空閒時顯示方案開關</string>
-    <string name="keyboard__show_key_popup_title">按鍵時彈出顯示字符</string>
     <string-array name="keyboard__landscape_mode_entries">
         <item>永不</item>
         <item>只在橫屏時</item>
@@ -64,7 +62,6 @@ SPDX-License-Identifier: GPL-3.0-or-later
     <string name="reset_success">回廠成功</string>
     <string name="reset_failure">回廠失敗</string>
     <string name="deploy_progress">正在部署…</string>
-    <string name="set_ime">設定</string>
     <string name="other_ime">其他輸入法</string>
     <string name="other__ui_mode_title">夜間模式</string>
     <string name="others">其他</string>
@@ -84,17 +81,11 @@ SPDX-License-Identifier: GPL-3.0-or-later
     <string name="show_arrow_in_switches">方案開關顯示箭頭符號（→）</string>
     <string name="keyboard__fullscreen_mode_title">橫屏時全屏編輯</string>
     <string name="deploy_finish">部署完成</string>
-    <string-array name="keyboard__fullscreen_mode_entries">
-        <item>自動</item>
-        <item>總是</item>
-        <item>從不</item>
-    </string-array>
     <string name="about__app_info">應用資訊</string>
     <string name="about__support">支援</string>
     <string name="about__open_source_licenses">開放源代碼軟體許可</string>
     <string name="system_default">系統預設</string>
     <string name="keyboard__key_swipe_travel_title">觸發滑動手勢的最短距離</string>
-    <string name="keyboard__hook_candidate">點擊候選詞</string>
     <string name="trime_app_slogan">擊響中文之韻</string>
     <string name="external_storage_permission_not_available">儲存許可權不可用</string>
     <string name="external_storage_permission_granted">已授予儲存許可權</string>
@@ -117,24 +108,12 @@ SPDX-License-Identifier: GPL-3.0-or-later
     <string name="setup__skip_hint_yes">好的，謝謝</string>
     <string name="setup__skip_hint_no">不，我想留在這兒</string>
     <string name="follow_system_day_night_color">跟隨系統設定主題色調</string>
-    <string name="pref_keyboard__hook">攔截事件</string>
-    <string name="keyboard__hook_ctrl_a">攔截 Ctrl+A</string>
-    <string name="keyboard__hook_ctrl_cv">攔截 Ctrl+C/V/X</string>
-    <string name="keyboard__hook_ctrl_lr">攔截 Ctrl+Left/Right</string>
-    <string name="keyboard__hook_ctrl_zy">攔截 Ctrl+Z/Y</string>
-    <string name="pref_keyboard__hook_summary">事件不發送給被編輯的 App 及 librime</string>
-    <string name="keyboard__hook_candidate_on">直接上屏候選詞</string>
-    <string name="keyboard__hook_candidate_off">發送數字鍵模擬鍵盤錄入</string>
     <string name="keyboard__swipe_enabled">允許觸發按鍵的滑動手勢</string>
     <string name="keyboard__key_swipe_velocity">觸發按鍵滑動手勢的速度（距離/速度滿足其一即可）</string>
     <string name="about__build_info">建構資訊</string>
     <string name="pref_trime_telegram">Telegram群組</string>
     <string name="quick_bar">快捷欄</string>
     <string name="copy_done">已複製</string>
-    <string name="keyboard__hook_shift_space">點擊空格時，忽略Shift的鎖定狀態</string>
-    <string name="keyboard__hook_shift_num">點擊0-9時，忽略Shift的鎖定狀態</string>
-    <string name="keyboard__hook_shift_symbol">點擊符號鍵時，忽略Shift的鎖定狀態</string>
-    <string name="keyboard__hook_shift_arrow">點選方向鍵時，保持Shift的鎖定狀態</string>
     <string name="export">匯出</string>
     <string name="scroll_to_bottom">跳到最後</string>
     <string name="app_crash_message">抱歉，但我們為您帶來了一些紀錄檔以供調查。</string>
@@ -159,8 +138,6 @@ SPDX-License-Identifier: GPL-3.0-or-later
     <string name="delete">刪除</string>
     <string name="edit">編輯</string>
     <string name="collect">收藏</string>
-    <string name="liquid_keyboard_edit_text_hint">在此處編輯文本</string>
-    <string name="liquid_keyboard_ask_to_delete_all">刪除全部？</string>
     <string name="ok">確定</string>
     <string name="cancel">取消</string>
     <string name="clipboard_draft_exclude_app_title">不自動保存草稿的應用（包名）</string>
@@ -177,9 +154,6 @@ SPDX-License-Identifier: GPL-3.0-or-later
     <string name="pref_clipboard_summary">收藏夾和草稿箱也在這裡管理</string>
     <string name="a_regular_expression_per_line">一行一條正則表示式</string>
     <string name="custom_sound_effect_enabled">使用自訂按鍵音</string>
-    <string name="pref_keyboard__landscape">橫向模式</string>
-    <string name="keyboard__landscape_mode_title">啟用橫屏模式</string>
-    <string name="keyboard__split_space_title">自動分割鍵盤比例</string>
     <string name="setup__step_three">第 3 步</string>
     <string name="setup__request_permmision_hint">當前同文須要存儲權限以訪問配置檔案、使得使用者容易修改。</string>
     <string name="setup__request_permmision">请求存储权限</string>
@@ -219,7 +193,6 @@ SPDX-License-Identifier: GPL-3.0-or-later
     <string name="candidates_window_position">候選詞視窗位置</string>
     <string name="deploy_failure">部署失敗</string>
     <string name="view_deploy_failure_log">部署失敗。點此檢視錯誤日誌。</string>
-    <string name="hide_quick_bar">隱藏快捷欄</string>
     <string name="schema_switches_debounce_interval">方案開關連擊間隔</string>
     <string name="navbar_bkg_none">無背景</string>
     <string name="navbar_bkg_color_only">跟隨鍵盤背景色</string>

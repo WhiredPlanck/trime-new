@@ -39,7 +39,6 @@ import com.osfans.trime.daemon.RimeDaemon
 import com.osfans.trime.daemon.RimeSession
 import com.osfans.trime.data.db.DraftHelper
 import com.osfans.trime.data.prefs.AppPrefs
-import com.osfans.trime.data.prefs.PreferenceDelegate
 import com.osfans.trime.data.prefs.PreferenceDelegateProvider
 import com.osfans.trime.data.theme.ColorManager
 import com.osfans.trime.data.theme.Theme
@@ -85,21 +84,7 @@ open class TrimeInputMethodService : LifecycleInputMethodService() {
     private val selection = intArrayOf(0, 0)
     private val rimeIntentReceiver = RimeIntentReceiver()
 
-    var lastCommittedText: CharSequence = ""
-        private set
-
-    private val recreateInputViewPrefs: Array<PreferenceDelegate<*>> =
-        arrayOf(
-            prefs.keyboard.showSchemaSwitches,
-            prefs.keyboard.showArrowInSwitches,
-            prefs.keyboard.hideQuickBar,
-        )
-
-    @Keep
-    private val recreateInputViewListener =
-        PreferenceDelegate.OnChangeListener<Any> { _, _ ->
-            replaceInputView(ThemeManager.activeTheme)
-        }
+    private var lastCommittedText: CharSequence = ""
 
     @Keep
     private val recreateCandidatesViewListener =
@@ -172,9 +157,6 @@ open class TrimeInputMethodService : LifecycleInputMethodService() {
                 handleRimeMessage(it)
             }
         }
-        recreateInputViewPrefs.forEach {
-            it.registerOnChangeListener(recreateInputViewListener)
-        }
         prefs.candidates.registerOnChangeListener(recreateCandidatesViewListener)
         ThemeManager.init(resources.configuration)
         ThemeManager.addOnChangedListener(onThemeChangeListener)
@@ -238,9 +220,6 @@ open class TrimeInputMethodService : LifecycleInputMethodService() {
     override fun onDestroy() {
         InputFeedbackManager.destroy()
         inputView = null
-        recreateInputViewPrefs.forEach {
-            it.unregisterOnChangeListener(recreateInputViewListener)
-        }
         prefs.candidates.unregisterOnChangeListener(recreateCandidatesViewListener)
         ThemeManager.removeOnChangedListener(onThemeChangeListener)
         ColorManager.removeOnChangedListener(onColorChangeListener)
@@ -580,8 +559,6 @@ open class TrimeInputMethodService : LifecycleInputMethodService() {
      *
      * @param keyEventCode The key code to send, use a key code defined in Android's [KeyEvent].
      * @param metaState Flags indicating which meta keys are currently pressed.
-     * @param count How often the key is pressed while the meta keys passed are down. Must be greater than or equal to
-     *  `1`, else this method will immediately return false.
      *
      * @return True on success, false if an error occurred or the input connection is invalid.
      */

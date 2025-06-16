@@ -164,8 +164,6 @@ dependencies {
     implementation(libs.kaml)
     implementation(libs.timber)
     implementation(libs.xxpermissions)
-    ksp(libs.kotlin.inject.compiler)
-    implementation(libs.kotlin.inject.runtime)
     implementation(libs.splitties.bitflags)
     implementation(libs.splitties.systemservices)
     implementation(libs.splitties.views.dsl)

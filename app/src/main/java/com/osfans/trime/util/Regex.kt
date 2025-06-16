@@ -5,7 +5,7 @@
 package com.osfans.trime.util
 
 fun String.removeRegexSet(regexSet: Set<Regex>): String {
-    regexSet.forEach { replace(it, String.EMPTY) }
+    regexSet.forEach { replace(it, "") }
     return this
 }
 

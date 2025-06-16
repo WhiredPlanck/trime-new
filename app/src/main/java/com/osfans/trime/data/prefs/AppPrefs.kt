@@ -121,22 +121,6 @@ class AppPrefs(
     ) : PreferenceDelegateOwner(shared) {
         companion object {
             const val SOFT_CURSOR_ENABLED = "keyboard__soft_cursor"
-            const val POPUP_KEY_PRESS_ENABLED = "keyboard__show_key_popup"
-            const val SHOW_SCHEMA_SWITCHES = "show_schema_switches_in_idle"
-            const val SHOW_ARROW_IN_SWITCHES = "show_arrow_in_switches"
-            const val SWITCHES_DEBOUNCE_INTERVAL = "schema_switches_debounce_interval"
-            const val HIDE_QUICK_BAR = "hide_quick_bar"
-            const val LANDSCAPE_MODE = "keyboard__landscape_mode"
-            const val SPLIT_SPACE_PERCENT = "keyboard__split_space"
-
-            const val HOOK_CTRL_A = "keyboard__hook_ctrl_a"
-            const val HOOK_CTRL_CV = "keyboard__hook_ctrl_cv"
-            const val HOOK_CTRL_LR = "keyboard__hook_ctrl_lr"
-            const val HOOK_CTRL_ZY = "keyboard__hook_ctrl_zy"
-            const val HOOK_SHIFT_SPACE = "keyboard__hook_shift_space"
-            const val HOOK_SHIFT_NUM = "keyboard__hook_shift_num"
-            const val HOOK_SHIFT_SYMBOL = "keyboard__hook_shift_symbol"
-            const val HOOK_SHIFT_ARROW = "keyboard__hook_shift_arrow"
 
             const val SOUND_ON_KEYPRESS = "sound_on_keypress"
             const val KEY_SOUND_VALUE = "sound_volume"
@@ -158,31 +142,6 @@ class AppPrefs(
         }
 
         val softCursorEnabled by bool(SOFT_CURSOR_ENABLED, true)
-        val popupKeyPressEnabled = bool(POPUP_KEY_PRESS_ENABLED, false)
-        val showSchemaSwitches = bool(SHOW_SCHEMA_SWITCHES, true)
-        val showArrowInSwitches = bool(SHOW_ARROW_IN_SWITCHES, true)
-        val switchesDebounceInterval = int(SWITCHES_DEBOUNCE_INTERVAL, 300)
-        val hideQuickBar = bool(HIDE_QUICK_BAR, false)
-
-        enum class LandscapeModeOption {
-            NEVER,
-            LANDSCAPE,
-            AUTO,
-            ALWAYS,
-        }
-
-        val landscapeModeOption by enum(LANDSCAPE_MODE, LandscapeModeOption.NEVER)
-        val splitSpacePercent = int(SPLIT_SPACE_PERCENT, 100)
-
-        val hookCtrlA by bool(HOOK_CTRL_A, false)
-        val hookCtrlCV by bool(HOOK_CTRL_CV, false)
-        val hookCtrlLR by bool(HOOK_CTRL_LR, false)
-        val hookCtrlZY by bool(HOOK_CTRL_ZY, false)
-        val hookShiftSpace by bool(HOOK_SHIFT_SPACE, false)
-        val hookShiftNum by bool(HOOK_SHIFT_NUM, false)
-        val hookShiftSymbol by bool(HOOK_SHIFT_SYMBOL, false)
-        val hookShiftArrow by bool(HOOK_SHIFT_ARROW, true)
-
         val soundOnKeyPress = bool(SOUND_ON_KEYPRESS, false)
         val soundEffectEnabled = bool(SOUND_EFFECT_ENABLED, false)
         val customSoundEffect = string(CUSTOM_SOUND_EFFECT, "")
@@ -249,7 +208,6 @@ class AppPrefs(
         var draftOutputRules by string(DRAFT_OUTPUT_RULES, "")
         var clipboardLimit by int(CLIPBOARD_LIMIT, 10)
         var draftLimit by int(DRAFT_LIMIT, 10)
-        var draftExcludeApp by string(DRAFT_EXCLUDE_APP, "")
     }
 
     /**
