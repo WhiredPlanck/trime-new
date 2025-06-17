@@ -134,7 +134,7 @@ class Rime :
             selectRimeCandidateOnCurrentPage(idx).also { if (it) requireResponse() }
         }
 
-    override suspend fun deletedPagedCandidate(idx: Int): Boolean =
+    override suspend fun deletePagedCandidate(idx: Int): Boolean =
         withRimeContext {
             deleteRimeCandidateOnCurrentPage(idx).also { if (it) requireResponse() }
         }

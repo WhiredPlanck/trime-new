@@ -116,27 +116,23 @@ class InputView(
         when (it) {
             is RimeMessage.ResponseMessage ->
                 it.data.let msg@{
+                    val composition = it.context.composition
+                    val preedit = composition.preedit ?: ""
                     val candidates = it.context.menu.candidates
-                    val highlighted = it.context.menu.highlightedCandidateIndex
-                    val event =
-                        if (candidates.isNotEmpty()) {
-                            SystemEvent.CandidatesEvent(
-                                SystemEvent.CandidatesEvent.Data(
-                                    candidates,
-                                    highlighted,
-                                ),
-                            )
-                        } else {
-                            SystemEvent.ClearEvent
-                        }
-                    inputViewComponent.sendEvent(event)
+                    if (preedit.isEmpty() && candidates.isEmpty()) {
+                        inputViewComponent.sendEvent(SystemEvent.Clear)
+                    } else {
+                        val data = SystemEvent.Preedit.Data("", preedit)
+                        inputViewComponent.sendEvent(SystemEvent.Preedit(data))
+                        inputViewComponent.expandCandidates()
+                    }
                 }
             else -> {}
         }
     }
 
     fun onWindowHidden() {
-        inputViewComponent.sendEvent(SystemEvent.HideEvent)
+        inputViewComponent.sendEvent(SystemEvent.Hide)
     }
 
     fun updateSelection(

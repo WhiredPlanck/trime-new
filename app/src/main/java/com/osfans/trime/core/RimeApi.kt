@@ -41,7 +41,7 @@ interface RimeApi {
 
     suspend fun selectPagedCandidate(idx: Int): Boolean
 
-    suspend fun deletedPagedCandidate(idx: Int): Boolean
+    suspend fun deletePagedCandidate(idx: Int): Boolean
 
     suspend fun changeCandidatePage(backward: Boolean): Boolean
 

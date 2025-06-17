@@ -12,15 +12,17 @@ import androidx.lifecycle.lifecycleScope
 import androidx.webkit.WebMessageCompat
 import androidx.webkit.WebMessagePortCompat
 import androidx.webkit.WebViewFeature
+import com.osfans.trime.R
 import com.osfans.trime.core.RimeKeyMapping
+import com.osfans.trime.core.RimeProto
 import com.osfans.trime.daemon.RimeSession
-import com.osfans.trime.daemon.launchOnReady
 import com.osfans.trime.ime.keyboard.KeyCode
 import com.osfans.trime.ime.keyboard.VirtualKeyboardEvent
 import kotlinx.coroutines.launch
 import kotlinx.serialization.encodeToString
 import kotlinx.serialization.json.Json
 import splitties.bitflags.hasFlag
+import timber.log.Timber
 
 class InputViewComponent(
     private val service: TrimeInputMethodService,
@@ -66,7 +68,7 @@ class InputViewComponent(
 
     fun updateEnterKeyType(info: EditorInfo) {
         val label = labelFromEditorInfo(info)
-        sendEvent(SystemEvent.EnterKeyTypeEvent(label))
+        sendEvent(SystemEvent.EnterKeyType(label))
     }
 
     fun onSelectionUpdate(
@@ -78,7 +80,7 @@ class InputViewComponent(
     }
 
     private fun updateSelection() {
-        sendEvent(if (hasSelection || userSelection) SystemEvent.SelectEvent else SystemEvent.DeselectEvent)
+        sendEvent(if (hasSelection || userSelection) SystemEvent.Select else SystemEvent.Deselect)
     }
 
     private fun sendDirectionKey(keyEventCode: Int) {
@@ -118,44 +120,72 @@ class InputViewComponent(
         }
     }
 
+    fun expandCandidates() {
+        scrollCandidates(0, 48)
+    }
+
+    private fun scrollCandidates(
+        start: Int,
+        count: Int,
+    ) {
+        service.postRimeJob {
+            val candidates =
+                getCandidates(start, count)
+                    .map { RimeProto.Candidate(it.text, it.comment, "") }
+            val size = candidates.size
+            val endReached = size < count || candidates.isEmpty()
+            val data =
+                SystemEvent.Candidates.Data(
+                    candidates,
+                    if (start == 0) 0 else -1,
+                    ScrollState.SCROLLING,
+                    start == 0,
+                    endReached,
+                )
+            sendEvent(SystemEvent.Candidates(data))
+        }
+    }
+
     fun handleVirtualKeyboardEvent(event: VirtualKeyboardEvent) {
+        Timber.d("Handling '$event'")
         when (event) {
-            is VirtualKeyboardEvent.KeyDownEvent -> {
+            is VirtualKeyboardEvent.KeyDown -> {
                 handleKey(event.data.key, KeyCode.convertCode(event.data.code))
             }
-            is VirtualKeyboardEvent.SelectCandidateEvent -> {
-                rime.launchOnReady {
-                    it.selectCandidate(event.data)
-                }
+            is VirtualKeyboardEvent.SelectCandidate -> {
+                service.postRimeJob { selectCandidate(event.data) }
             }
-            is VirtualKeyboardEvent.CollapseEvent -> {
+            is VirtualKeyboardEvent.Collapse -> {
                 service.requestHideSelf(InputMethodManager.HIDE_NOT_ALWAYS)
             }
-            is VirtualKeyboardEvent.CommitEvent -> {
+            is VirtualKeyboardEvent.Commit -> {
                 service.postRimeJob {
                     clearComposition()
                     service.lifecycleScope.launch { service.commitText(event.data) }
                 }
             }
-            is VirtualKeyboardEvent.UndoEvent -> {
+            is VirtualKeyboardEvent.SetInputMethod -> {
+                service.postRimeJob { selectSchema(event.data) }
+            }
+            is VirtualKeyboardEvent.Undo -> {
                 service.run { sendDownUpKeyEvent(KeyEvent.KEYCODE_Z, meta(ctrl = true)) }
             }
-            is VirtualKeyboardEvent.RedoEvent -> {
+            is VirtualKeyboardEvent.Redo -> {
                 service.run { sendDownUpKeyEvent(KeyEvent.KEYCODE_Z, meta(ctrl = true, shift = true)) }
             }
-            is VirtualKeyboardEvent.CutEvent -> {
+            is VirtualKeyboardEvent.Cut -> {
                 userSelection = false
                 service.currentInputConnection?.performContextMenuAction(android.R.id.cut)
             }
-            is VirtualKeyboardEvent.CopyEvent -> {
+            is VirtualKeyboardEvent.Copy -> {
                 userSelection = false
                 service.currentInputConnection?.performContextMenuAction(android.R.id.copy)
             }
-            is VirtualKeyboardEvent.PasteEvent -> {
+            is VirtualKeyboardEvent.Paste -> {
                 userSelection = false
                 service.currentInputConnection?.performContextMenuAction(android.R.id.paste)
             }
-            is VirtualKeyboardEvent.SelectEvent -> {
+            is VirtualKeyboardEvent.Select -> {
                 if (hasSelection) {
                     userSelection = false
                     service.cancelSelection()
@@ -164,12 +194,42 @@ class InputViewComponent(
                     updateSelection()
                 }
             }
-            is VirtualKeyboardEvent.SelectAllEvent -> {
+            is VirtualKeyboardEvent.SelectAll -> {
                 userSelection = true
                 service.currentInputConnection?.performContextMenuAction(android.R.id.selectAll)
             }
-            is VirtualKeyboardEvent.DeselectEvent -> {
+            is VirtualKeyboardEvent.Deselect -> {
                 userSelection = false
+            }
+            is VirtualKeyboardEvent.Globe -> {
+                service.postRimeJob {
+                    val selectedSchemata = selectedSchemata()
+                    val currentSchemaId = selectedSchemaId()
+                    val currentIndex = selectedSchemata.indexOfFirst { it.id == currentSchemaId }
+                    val next = selectedSchemata[(currentIndex + 1) % selectedSchemata.size]
+                    if (next.id == currentSchemaId) return@postRimeJob
+                    selectSchema(next.id)
+                }
+            }
+            is VirtualKeyboardEvent.AskCandidateActions -> {
+                val index = event.data
+                val data =
+                    SystemEvent.CandidateActions.Data(
+                        index,
+                        listOf(
+                            CandidateAction(
+                                0,
+                                service.getString(R.string.forget_this_word),
+                            ),
+                        ),
+                    )
+                sendEvent(SystemEvent.CandidateActions(data))
+            }
+            is VirtualKeyboardEvent.CandidateAction -> {
+                service.postRimeJob { forgetCandidate(event.data.index) }
+            }
+            is VirtualKeyboardEvent.Scroll -> {
+                scrollCandidates(event.data.start, event.data.count)
             }
             else -> {}
         }
