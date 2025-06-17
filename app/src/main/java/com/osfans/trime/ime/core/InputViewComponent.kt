@@ -16,6 +16,7 @@ import com.osfans.trime.R
 import com.osfans.trime.core.RimeKeyMapping
 import com.osfans.trime.core.RimeProto
 import com.osfans.trime.daemon.RimeSession
+import com.osfans.trime.daemon.launchOnReady
 import com.osfans.trime.ime.keyboard.KeyCode
 import com.osfans.trime.ime.keyboard.VirtualKeyboardEvent
 import kotlinx.coroutines.launch
@@ -33,6 +34,8 @@ class InputViewComponent(
 
     private var hasSelection = false
     private var userSelection = false
+    private val selection = intArrayOf(0, 0)
+    private var backspaceSelectionCount = 0
 
     fun setPort(port: WebMessagePortCompat?) {
         this.port = port
@@ -48,6 +51,21 @@ class InputViewComponent(
             } else {
                 pendingEvents.add(event)
             }
+        }
+    }
+
+    fun updateInputMethods() {
+        rime.launchOnReady { api ->
+            val asInputMethods =
+                api
+                    .selectedSchemata()
+                    .map { InputMethod(it.id, it.name) }
+            val data =
+                SystemEvent.InputMethods.Data(
+                    api.selectedSchemaId(),
+                    asInputMethods,
+                )
+            sendEvent(SystemEvent.InputMethods(data))
         }
     }
 
@@ -76,6 +94,8 @@ class InputViewComponent(
         end: Int,
     ) {
         hasSelection = start != end
+        selection[0] = start
+        selection[1] = end
         updateSelection()
     }
 
@@ -115,6 +135,39 @@ class InputViewComponent(
                             service.currentInputConnection?.commitText(key, 1)
                         }
                     }
+                }
+            }
+        }
+    }
+
+    private fun handleBackspaceSlide(direction: VirtualKeyboardEvent.BackspaceSlide.Direction) {
+        if (rime.run { statusCached }.isComposing) {
+            if (direction == VirtualKeyboardEvent.BackspaceSlide.Direction.RELEASE) {
+                service.postRimeJob { clearComposition() }
+            }
+            return
+        }
+        when (direction) {
+            VirtualKeyboardEvent.BackspaceSlide.Direction.LEFT -> {
+                val selectionStart = selection[0]
+                if (backspaceSelectionCount < selectionStart) {
+                    backspaceSelectionCount += 1
+                    userSelection = true
+                    sendDirectionKey(KeyEvent.KEYCODE_DPAD_LEFT)
+                }
+            }
+            VirtualKeyboardEvent.BackspaceSlide.Direction.RIGHT -> {
+                if (backspaceSelectionCount > 0) {
+                    backspaceSelectionCount -= 1
+                    userSelection = true
+                    sendDirectionKey(KeyEvent.KEYCODE_DPAD_RIGHT)
+                }
+            }
+            VirtualKeyboardEvent.BackspaceSlide.Direction.RELEASE -> {
+                if (backspaceSelectionCount > 0) {
+                    service.sendDownUpKeyEvent(KeyEvent.KEYCODE_DEL)
+                    userSelection = false
+                    backspaceSelectionCount = 0
                 }
             }
         }
@@ -227,6 +280,9 @@ class InputViewComponent(
             }
             is VirtualKeyboardEvent.CandidateAction -> {
                 service.postRimeJob { forgetCandidate(event.data.index) }
+            }
+            is VirtualKeyboardEvent.BackspaceSlide -> {
+                handleBackspaceSlide(event.data)
             }
             is VirtualKeyboardEvent.Scroll -> {
                 scrollCandidates(event.data.start, event.data.count)

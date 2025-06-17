@@ -89,6 +89,8 @@ class InputView(
                 )
             }
 
+        inputViewComponent.updateInputMethods()
+
         add(
             keyboardView,
             lParams(matchParent, wrapContent) {
@@ -114,6 +116,9 @@ class InputView(
 
     override fun handleRimeMessage(it: RimeMessage<*>) {
         when (it) {
+            is RimeMessage.SchemaMessage -> {
+                inputViewComponent.updateInputMethods()
+            }
             is RimeMessage.ResponseMessage ->
                 it.data.let msg@{
                     val composition = it.context.composition
