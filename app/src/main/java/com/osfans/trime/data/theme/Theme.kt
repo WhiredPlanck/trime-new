@@ -7,14 +7,8 @@ package com.osfans.trime.data.theme
 import android.os.Parcelable
 import com.osfans.trime.core.Rime
 import com.osfans.trime.data.theme.mapper.GeneralStyleMapper
-import com.osfans.trime.data.theme.mapper.LiquidKeyboardMapper
-import com.osfans.trime.data.theme.mapper.PresetKeyMapper
-import com.osfans.trime.data.theme.mapper.TextKeyboardMapper
 import com.osfans.trime.data.theme.model.ColorScheme
 import com.osfans.trime.data.theme.model.GeneralStyle
-import com.osfans.trime.data.theme.model.LiquidKeyboard
-import com.osfans.trime.data.theme.model.PresetKey
-import com.osfans.trime.data.theme.model.TextKeyboard
 import com.osfans.trime.util.config.Config
 import kotlinx.parcelize.Parcelize
 import timber.log.Timber
@@ -25,9 +19,6 @@ data class Theme(
     val configId: String,
     val name: String,
     val generalStyle: GeneralStyle,
-    val liquidKeyboard: LiquidKeyboard,
-    val presetKeys: Map<String, PresetKey>,
-    val presetKeyboards: Map<String, TextKeyboard>,
     val colorSchemes: List<ColorScheme>,
     val fallbackColors: Map<String, String>,
 ) : Parcelable {
@@ -43,15 +34,6 @@ data class Theme(
                     configId = configId,
                     name = c.getString("name"),
                     generalStyle = GeneralStyleMapper("style", c).map(),
-                    liquidKeyboard = LiquidKeyboardMapper("liquid_keyboard", c).map(),
-                    presetKeys =
-                        c.getMap("preset_keys").mapValues {
-                            PresetKeyMapper("preset_keys/${it.key}", c).map()
-                        },
-                    presetKeyboards =
-                        c.getMap("preset_keyboards").mapValues {
-                            TextKeyboardMapper("preset_keyboards/${it.key}", c).map()
-                        },
                     colorSchemes =
                         c
                             .getMap("preset_color_schemes")

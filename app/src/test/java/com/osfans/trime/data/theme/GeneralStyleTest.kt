@@ -4,32 +4,22 @@
 
 package com.osfans.trime.data.theme
 
-import com.osfans.trime.BuildConfig
-import com.osfans.trime.core.Rime
-import com.osfans.trime.core.RimeConfig
 import com.osfans.trime.data.theme.mapper.GeneralStyleMapper
 import com.osfans.trime.data.theme.model.GeneralStyle
+import com.osfans.trime.util.config.Config
 import io.kotest.core.spec.style.BehaviorSpec
 import io.kotest.matchers.shouldBe
 import io.kotest.matchers.shouldNotBe
-import java.io.File
 
 class GeneralStyleTest :
     BehaviorSpec({
         Given("Correct trime.yaml") {
-            val dir = File("src/test/assets")
-            Rime.startupRime(
-                dir.absolutePath,
-                dir.absolutePath,
-                BuildConfig.BUILD_VERSION_NAME,
-                false,
-            )
+            val generalStyle =
+                Config().apply { loadFromFile("src/test/assets/trime.yaml") }.let {
+                    GeneralStyleMapper("style", it).map()
+                }
 
             When("loaded") {
-                val generalStyle =
-                    RimeConfig.openUserConfig("trime").use {
-                        GeneralStyleMapper("style", it).map()
-                    }
 
                 Then("it should not be null") {
                     generalStyle shouldNotBe null
@@ -39,24 +29,15 @@ class GeneralStyleTest :
                     generalStyle.candidateFont shouldBe listOf("han.ttf")
                 }
             }
-
-            Rime.exitRime()
         }
 
         Given("Empty trime.yaml") {
-            val dir = File("src/test/assets")
-            Rime.startupRime(
-                dir.absolutePath,
-                dir.absolutePath,
-                BuildConfig.BUILD_VERSION_NAME,
-                false,
-            )
+            val generalStyle =
+                Config().apply { loadFromFile("src/test/assets/incorrect.yaml") }.let {
+                    GeneralStyleMapper("style", it).map()
+                }
 
             When("loaded") {
-                val generalStyle =
-                    RimeConfig.openUserConfig("incorrect").use {
-                        GeneralStyleMapper("style", it).map()
-                    }
 
                 Then("with default value without exception") {
                     generalStyle.autoCaps shouldBe ""
@@ -72,7 +53,5 @@ class GeneralStyleTest :
                     generalStyle.layout shouldNotBe null
                 }
             }
-
-            Rime.exitRime()
         }
     })

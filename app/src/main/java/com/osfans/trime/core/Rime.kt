@@ -9,7 +9,6 @@ import com.osfans.trime.data.base.DataManager
 import com.osfans.trime.data.opencc.OpenCCDictManager
 import com.osfans.trime.data.schema.SchemaManager
 import com.osfans.trime.util.appContext
-import com.osfans.trime.util.isAsciiPrintable
 import com.osfans.trime.util.isStorageAvailable
 import kotlinx.coroutines.channels.BufferOverflow
 import kotlinx.coroutines.flow.MutableSharedFlow
@@ -199,10 +198,7 @@ class Rime :
                 SchemaManager.init(it.data.id)
             }
             is RimeMessage.OptionMessage -> {
-                getRimeStatus()?.let {
-                    statusCached = it
-                    inputStatus = it // for compatibility
-                }
+                statusCached = getRimeStatus()!!
                 SchemaManager.updateSwitchOptions()
             }
             is RimeMessage.DeployMessage -> {
@@ -212,11 +208,7 @@ class Rime :
             }
             is RimeMessage.ResponseMessage ->
                 it.data.let event@{ data ->
-                    data.status.let {
-                        statusCached = it
-                        inputStatus = it // for compatibility
-                    }
-                    inputContext = data.context // for compatibility
+                    statusCached = data.status
                     compositionCached = data.context.composition
                     menuCached = data.context.menu
                     rawInputCached = data.context.input
@@ -254,8 +246,6 @@ class Rime :
     }
 
     companion object {
-        private var inputContext: RimeProto.Context? = null
-        private var inputStatus: RimeProto.Status? = null
         private val messageFlow_ =
             MutableSharedFlow<RimeMessage<*>>(
                 extraBufferCapacity = 15,
@@ -267,54 +257,6 @@ class Rime :
         init {
             System.loadLibrary("rime_jni")
         }
-
-        @JvmStatic
-        val isComposing get() = inputStatus?.isComposing ?: false
-
-        @JvmStatic
-        val isAsciiMode get() = inputStatus?.isAsciiMode ?: true
-
-        @JvmStatic
-        val currentSchemaName get() = inputStatus?.schemaName ?: ""
-
-        @JvmStatic
-        fun hasMenu(): Boolean = !inputContext?.menu?.candidates.isNullOrEmpty()
-
-        @JvmStatic
-        fun hasLeft(): Boolean = hasMenu() && inputContext?.menu?.pageNumber != 0
-
-        @JvmStatic
-        fun showAsciiPunch(): Boolean = inputStatus?.isAsciiPunch == true || inputStatus?.isAsciiMode == true
-
-        @JvmStatic
-        fun simulateKeySequence(sequence: CharSequence): Boolean {
-            if (!sequence.first().isAsciiPrintable()) return false
-            Timber.d("simulateKeySequence: $sequence")
-
-            val simulateResult =
-                simulateRimeKeySequence(
-                    sequence.toString().replace("{}", "{braceleft}{braceright}"),
-                )
-            val commit = getRimeCommit()
-            val ctx = getRimeContext()
-
-            return (simulateResult && (!commit?.text.isNullOrEmpty() || !ctx?.input.isNullOrEmpty())).also {
-                Timber.d("simulateKeySequence ${if (it) "success" else "failed"}")
-                if (it) {
-                    handleRimeMessage(
-                        4, // RimeMessage.MessageType.Response
-                        arrayOf(
-                            commit ?: RimeProto.Commit(null),
-                            ctx ?: return false,
-                            getRimeStatus() ?: return false,
-                        ),
-                    )
-                }
-            }
-        }
-
-        @JvmStatic
-        fun getOption(option: String): Boolean = getRimeOption(option)
 
         // init
         @JvmStatic

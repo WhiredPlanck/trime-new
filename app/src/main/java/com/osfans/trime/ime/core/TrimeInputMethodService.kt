@@ -12,7 +12,6 @@ import android.content.res.Configuration
 import android.graphics.RectF
 import android.inputmethodservice.InputMethodService
 import android.os.Build
-import android.os.Bundle
 import android.os.SystemClock
 import android.text.InputType
 import android.view.InputDevice
@@ -24,17 +23,12 @@ import android.view.Window
 import android.view.WindowManager
 import android.view.inputmethod.CursorAnchorInfo
 import android.view.inputmethod.EditorInfo
-import android.view.inputmethod.ExtractedTextRequest
-import android.view.inputmethod.InlineSuggestionsRequest
-import android.view.inputmethod.InlineSuggestionsResponse
 import android.widget.FrameLayout
 import androidx.annotation.Keep
-import androidx.annotation.RequiresApi
 import androidx.core.content.ContextCompat
 import androidx.core.view.inputmethod.EditorInfoCompat
 import androidx.core.view.updateLayoutParams
 import androidx.lifecycle.lifecycleScope
-import com.osfans.trime.BuildConfig
 import com.osfans.trime.core.KeyModifiers
 import com.osfans.trime.core.KeyValue
 import com.osfans.trime.core.RimeApi
@@ -51,13 +45,10 @@ import com.osfans.trime.data.theme.ColorManager
 import com.osfans.trime.data.theme.Theme
 import com.osfans.trime.data.theme.ThemeManager
 import com.osfans.trime.ime.candidates.popup.PopupCandidatesMode
-import com.osfans.trime.ime.candidates.suggestion.InlineSuggestionHelper
 import com.osfans.trime.ime.composition.CandidatesView
 import com.osfans.trime.ime.keyboard.InputFeedbackManager
-import com.osfans.trime.ime.keyboard.KeyboardSwitcher
 import com.osfans.trime.receiver.RimeIntentReceiver
 import com.osfans.trime.util.any
-import com.osfans.trime.util.findSectionFrom
 import com.osfans.trime.util.forceShowSelf
 import com.osfans.trime.util.isNightMode
 import com.osfans.trime.util.monitorCursorAnchor
@@ -69,7 +60,6 @@ import kotlinx.coroutines.channels.Channel
 import kotlinx.coroutines.channels.consumeEach
 import kotlinx.coroutines.launch
 import splitties.bitflags.hasFlag
-import splitties.systemservices.clipboardManager
 import splitties.systemservices.inputMethodManager
 import timber.log.Timber
 
@@ -214,7 +204,6 @@ open class TrimeInputMethodService : LifecycleInputMethodService() {
                         InputFeedbackManager.textCommitSpeak(commit.text)
                     }
                     updateComposingText(ctx)
-                    KeyboardSwitcher.currentKeyboardView?.invalidateAllKeys()
                 }
             else -> {}
         }
@@ -452,18 +441,6 @@ open class TrimeInputMethodService : LifecycleInputMethodService() {
         }
     }
 
-    @RequiresApi(Build.VERSION_CODES.R)
-    override fun onCreateInlineSuggestionsRequest(uiExtras: Bundle): InlineSuggestionsRequest? {
-        if (!inputDeviceManager.isVirtualKeyboard) return null
-        return InlineSuggestionHelper.createRequest(this)
-    }
-
-    @SuppressLint("NewApi")
-    override fun onInlineSuggestionsResponse(response: InlineSuggestionsResponse): Boolean {
-        if (!inputDeviceManager.isVirtualKeyboard) return false
-        return inputView?.handleInlineSuggestions(response) == true
-    }
-
     private val candidatesMode by AppPrefs.defaultInstance().candidates.mode
 
     override fun onStartInputView(
@@ -486,73 +463,6 @@ open class TrimeInputMethodService : LifecycleInputMethodService() {
                             updateDecorLocation()
                         }
                         workaroundNullCursorAnchorInfo()
-                    }
-                }
-            }
-            when (attribute.inputType and InputType.TYPE_MASK_VARIATION) {
-                InputType.TYPE_TEXT_VARIATION_EMAIL_ADDRESS,
-                InputType.TYPE_TEXT_VARIATION_PASSWORD,
-                InputType.TYPE_TEXT_VARIATION_VISIBLE_PASSWORD,
-                InputType.TYPE_TEXT_VARIATION_WEB_EMAIL_ADDRESS,
-                InputType.TYPE_TEXT_VARIATION_WEB_PASSWORD,
-                -> {
-                    Timber.d(
-                        "EditorInfo: private;" +
-                            " packageName=" +
-                            attribute.packageName +
-                            "; fieldName=" +
-                            attribute.fieldName +
-                            "; actionLabel=" +
-                            attribute.actionLabel +
-                            "; inputType=" +
-                            attribute.inputType +
-                            "; VARIATION=" +
-                            (attribute.inputType and InputType.TYPE_MASK_VARIATION) +
-                            "; CLASS=" +
-                            (attribute.inputType and InputType.TYPE_MASK_CLASS) +
-                            "; ACTION=" +
-                            (attribute.imeOptions and EditorInfo.IME_MASK_ACTION),
-                    )
-                    normalTextEditor = false
-                }
-
-                else -> {
-                    Timber.d(
-                        "EditorInfo: normal;" +
-                            " packageName=" +
-                            attribute.packageName +
-                            "; fieldName=" +
-                            attribute.fieldName +
-                            "; actionLabel=" +
-                            attribute.actionLabel +
-                            "; inputType=" +
-                            attribute.inputType +
-                            "; VARIATION=" +
-                            (attribute.inputType and InputType.TYPE_MASK_VARIATION) +
-                            "; CLASS=" +
-                            (attribute.inputType and InputType.TYPE_MASK_CLASS) +
-                            "; ACTION=" +
-                            (attribute.imeOptions and EditorInfo.IME_MASK_ACTION),
-                    )
-                    if (attribute.imeOptions and EditorInfo.IME_FLAG_NO_PERSONALIZED_LEARNING
-                        == EditorInfo.IME_FLAG_NO_PERSONALIZED_LEARNING
-                    ) {
-                        //  应用程求以隐身模式打开键盘应用程序
-                        normalTextEditor = false
-                        Timber.d("EditorInfo: normal -> private, IME_FLAG_NO_PERSONALIZED_LEARNING")
-                    } else if (attribute.packageName == BuildConfig.APPLICATION_ID ||
-                        prefs
-                            .clipboard
-                            .draftExcludeApp
-                            .trim()
-                            .split('\n')
-                            .contains(attribute.packageName)
-                    ) {
-                        normalTextEditor = false
-                        Timber.d("EditorInfo: normal -> exclude, packageName=%s", attribute.packageName)
-                    } else {
-                        normalTextEditor = true
-                        currentInputConnection?.let { DraftHelper.onExtractedTextChanged(it) }
                     }
                 }
             }
@@ -801,136 +711,6 @@ open class TrimeInputMethodService : LifecycleInputMethodService() {
         }
     }
 
-    fun shareText(): Boolean {
-        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
-            val ic = currentInputConnection ?: return false
-            val cs = ic.getSelectedText(0)
-            if (cs == null) ic.performContextMenuAction(android.R.id.selectAll)
-            return ic.performContextMenuAction(android.R.id.shareText)
-        }
-        return false
-    }
-
-    /** 編輯操作 */
-    fun hookKeyboard(
-        code: Int,
-        mask: Int,
-    ): Boolean {
-        val ic = currentInputConnection ?: return false
-        // 没按下 Ctrl 键
-        if (mask != KeyEvent.META_CTRL_ON) {
-            return false
-        }
-
-        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
-            if (prefs.keyboard.hookCtrlZY) {
-                when (code) {
-                    KeyEvent.KEYCODE_Y -> return ic.performContextMenuAction(android.R.id.redo)
-                    KeyEvent.KEYCODE_Z -> return ic.performContextMenuAction(android.R.id.undo)
-                }
-            }
-        }
-
-        when (code) {
-            KeyEvent.KEYCODE_A -> {
-                // 全选
-                return if (prefs.keyboard.hookCtrlA) ic.performContextMenuAction(android.R.id.selectAll) else false
-            }
-
-            KeyEvent.KEYCODE_X -> {
-                // 剪切
-                if (prefs.keyboard.hookCtrlCV) {
-                    val etr = ExtractedTextRequest()
-                    etr.token = 0
-                    val et = ic.getExtractedText(etr, 0)
-                    if (et != null) {
-                        if (et.selectionStart != et.selectionEnd) return ic.performContextMenuAction(android.R.id.cut)
-                    }
-                }
-                Timber.w("hookKeyboard cut fail")
-                return false
-            }
-
-            KeyEvent.KEYCODE_C -> {
-                // 复制
-                if (prefs.keyboard.hookCtrlCV) {
-                    val etr = ExtractedTextRequest()
-                    etr.token = 0
-                    val et = ic.getExtractedText(etr, 0)
-                    if (et != null) {
-                        if (et.selectionStart != et.selectionEnd) {
-                            ic.performContextMenuAction(android.R.id.copy).also { result ->
-                                if (result) {
-                                    clearTextSelection()
-                                }
-                                return result
-                            }
-                        }
-                    }
-                }
-                Timber.w("hookKeyboard copy fail")
-                return false
-            }
-
-            KeyEvent.KEYCODE_V -> {
-                // 粘贴
-                if (prefs.keyboard.hookCtrlCV) {
-                    val etr = ExtractedTextRequest()
-                    etr.token = 0
-                    val et = ic.getExtractedText(etr, 0)
-                    if (et == null) {
-                        Timber.d("hookKeyboard paste, et == null, try commitText")
-                        val clipboardText = clipboardManager.primaryClip?.getItemAt(0)?.coerceToText(this)
-                        if (ic.commitText(clipboardText, 1)) {
-                            return true
-                        }
-                    } else if (ic.performContextMenuAction(android.R.id.paste)) {
-                        return true
-                    }
-                    Timber.w("hookKeyboard paste fail")
-                }
-                return false
-            }
-
-            KeyEvent.KEYCODE_DPAD_RIGHT -> {
-                if (prefs.keyboard.hookCtrlLR) {
-                    val etr = ExtractedTextRequest()
-                    etr.token = 0
-                    val et = ic.getExtractedText(etr, 0)
-                    if (et != null) {
-                        val moveTo = et.text.findSectionFrom(et.startOffset + et.selectionEnd)
-                        ic.setSelection(moveTo, moveTo)
-                        return true
-                    }
-                }
-            }
-
-            KeyEvent.KEYCODE_DPAD_LEFT ->
-                if (prefs.keyboard.hookCtrlLR) {
-                    val etr = ExtractedTextRequest()
-                    etr.token = 0
-                    val et = ic.getExtractedText(etr, 0)
-                    if (et != null) {
-                        val moveTo = et.text.findSectionFrom(et.startOffset + et.selectionStart, true)
-                        ic.setSelection(moveTo, moveTo)
-                        return true
-                    }
-                }
-        }
-        return false
-    }
-
-    fun clearTextSelection() {
-        val ic = currentInputConnection ?: return
-        val etr = ExtractedTextRequest().apply { token = 0 }
-        val et = currentInputConnection.getExtractedText(etr, 0)
-        et?.let {
-            if (it.selectionStart != it.selectionEnd) {
-                ic.setSelection(it.selectionEnd, it.selectionEnd)
-            }
-        }
-    }
-
     private val composingTextMode by prefs.general.composingTextMode
 
     private fun updateComposingText(ctx: RimeProto.Context) {
@@ -945,26 +725,6 @@ open class TrimeInputMethodService : LifecycleInputMethodService() {
         if (ic.getSelectedText(0).isNullOrEmpty() || text.isNotEmpty()) {
             ic.setComposingText(text, 1)
         }
-    }
-
-    fun getActiveText(type: Int): String {
-        if (type == 2) return rime.run { rawInputCached } // 當前編碼
-        var text: CharSequence? = rime.run { compositionCached }.commitTextPreview // 當前候選
-        if (text.isNullOrEmpty()) {
-            val info = currentInputEditorInfo
-            text = EditorInfoCompat.getInitialSelectedText(info, 0) // 選中字
-        }
-        if (text.isNullOrEmpty()) {
-            if (type == 1) text = lastCommittedText // 剛上屏字
-        }
-        if (text.isNullOrEmpty()) {
-            val step = if (type == 4) 1024 else 1
-            text = getTextAroundCursor(step, before = true)
-        }
-        if (text.isNullOrEmpty()) {
-            text = getTextAroundCursor(before = false)
-        }
-        return text.toString()
     }
 
     private fun getTextAroundCursor(

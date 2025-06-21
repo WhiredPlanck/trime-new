@@ -73,16 +73,6 @@ SPDX-License-Identifier: GPL-3.0-or-later
             android:launchMode="singleTask"
             android:parentActivityName=".ui.main.PrefMainActivity" />
 
-        <activity
-            android:name=".ui.main.LiquidKeyboardEditActivity"
-            android:autoRemoveFromRecents="true"
-            android:excludeFromRecents="true"
-            android:label="@string/edit"
-            android:launchMode="singleInstance"
-            android:taskAffinity=".ui.main.LiquidKeyboardEditActivity"
-            android:theme="@style/Theme.DialogTheme"
-            android:windowSoftInputMode="stateAlwaysVisible|adjustPan" />
-
         <!-- Using an activity alias to disable/enable the app icon in the launcher -->
         <activity-alias
             android:name="com.osfans.trime.PrefLauncherAlias"
