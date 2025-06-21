@@ -4,14 +4,17 @@
 
 package com.osfans.trime.core
 
+import kotlinx.serialization.Serializable
+
 class RimeProto {
     data class Commit(
         val text: String?,
     )
 
+    @Serializable
     data class Candidate(
         val text: String,
-        val comment: String?,
+        val comment: String,
         val label: String,
     )
 

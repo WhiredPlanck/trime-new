@@ -216,44 +216,6 @@ open class TrimeInputMethodService : LifecycleInputMethodService() {
                     updateComposingText(ctx)
                     KeyboardSwitcher.currentKeyboardView?.invalidateAllKeys()
                 }
-            is RimeMessage.KeyMessage ->
-                it.data.let event@{
-                    val keyCode = it.value.keyCode
-                    if (keyCode == KeyEvent.KEYCODE_UNKNOWN) {
-                        when {
-                            !it.modifiers.release && it.value.value > 0 -> {
-                                runCatching {
-                                    commitText("${Char(it.value.value)}")
-                                }
-                            }
-                            else -> Timber.w("Unhandled Rime KeyEvent: $it")
-                        }
-                        return
-                    }
-
-                    val eventTime = SystemClock.uptimeMillis()
-                    if (it.modifiers.release) {
-                        sendUpKeyEvent(eventTime, keyCode, it.modifiers.metaState)
-                        return
-                    }
-
-                    // TODO: look for better workaround for this
-                    if (keyCode == KeyEvent.KEYCODE_ENTER) {
-                        handleReturnKey()
-                        return
-                    }
-
-                    if (keyCode in KeyEvent.KEYCODE_NUMPAD_0..KeyEvent.KEYCODE_NUMPAD_EQUALS) {
-                        // ignore KP_X keys, which is handled in `CommonKeyboardActionListener`.
-                        // Requires this empty body becoz Kotlin request it
-                        return
-                    }
-
-                    if (it.modifiers.shift) sendDownKeyEvent(eventTime, KeyEvent.KEYCODE_SHIFT_LEFT)
-                    sendDownKeyEvent(eventTime, keyCode, it.modifiers.metaState)
-                    if (it.modifiers.shift) sendUpKeyEvent(eventTime, KeyEvent.KEYCODE_SHIFT_LEFT)
-                    if (it.modifiers.ctrl && keyCode == KeyEvent.KEYCODE_C) clearTextSelection()
-                }
             else -> {}
         }
     }
@@ -644,26 +606,17 @@ open class TrimeInputMethodService : LifecycleInputMethodService() {
         ctrl: Boolean = false,
         alt: Boolean = false,
         shift: Boolean = false,
-        meta: Boolean = false,
-        sym: Boolean = false,
     ): Int {
         var metaState = 0
-        if (ctrl) {
-            metaState = metaState or KeyEvent.META_CTRL_ON or KeyEvent.META_CTRL_LEFT_ON
-        }
         if (alt) {
             metaState = metaState or KeyEvent.META_ALT_ON or KeyEvent.META_ALT_LEFT_ON
+        }
+        if (ctrl) {
+            metaState = metaState or KeyEvent.META_CTRL_ON or KeyEvent.META_CTRL_LEFT_ON
         }
         if (shift) {
             metaState = metaState or KeyEvent.META_SHIFT_ON or KeyEvent.META_SHIFT_LEFT_ON
         }
-        if (meta) {
-            metaState = metaState or KeyEvent.META_META_ON or KeyEvent.META_META_LEFT_ON
-        }
-        if (sym) {
-            metaState = metaState or KeyEvent.META_SYM_ON
-        }
-
         return metaState
     }
 
@@ -724,78 +677,64 @@ open class TrimeInputMethodService : LifecycleInputMethodService() {
     fun sendDownUpKeyEvent(
         keyEventCode: Int,
         metaState: Int = meta(),
-        count: Int = 1,
     ): Boolean {
-        if (count < 1) return false
-        val ic = currentInputConnection ?: return false
-        ic.clearMetaKeyStates(
-            KeyEvent.META_FUNCTION_ON
-                or KeyEvent.META_SHIFT_MASK
-                or KeyEvent.META_ALT_MASK
-                or KeyEvent.META_CTRL_MASK
-                or KeyEvent.META_META_MASK
-                or KeyEvent.META_SYM_ON,
-        )
-        ic.beginBatchEdit()
         val eventTime = SystemClock.uptimeMillis()
-        if (metaState and KeyEvent.META_CTRL_ON != 0) {
-            sendDownKeyEvent(eventTime, KeyEvent.KEYCODE_CTRL_LEFT)
-        }
-        if (metaState and KeyEvent.META_ALT_ON != 0) {
+        if (metaState.hasFlag(KeyEvent.META_ALT_ON)) {
             sendDownKeyEvent(eventTime, KeyEvent.KEYCODE_ALT_LEFT)
         }
-        if (metaState and KeyEvent.META_SHIFT_ON != 0) {
+        if (metaState.hasFlag(KeyEvent.META_CTRL_ON)) {
+            sendDownKeyEvent(eventTime, KeyEvent.KEYCODE_CTRL_LEFT)
+        }
+        if (metaState.hasFlag(KeyEvent.META_SHIFT_ON)) {
             sendDownKeyEvent(eventTime, KeyEvent.KEYCODE_SHIFT_LEFT)
         }
-        if (metaState and KeyEvent.META_META_ON != 0) {
-            sendDownKeyEvent(eventTime, KeyEvent.KEYCODE_META_LEFT)
-        }
-
-        if (metaState and KeyEvent.META_SYM_ON != 0) {
-            sendDownKeyEvent(eventTime, KeyEvent.KEYCODE_SYM)
-        }
-
-        for (n in 0 until count) {
-            sendDownKeyEvent(eventTime, keyEventCode, metaState)
-            sendUpKeyEvent(eventTime, keyEventCode, metaState)
-        }
-        if (metaState and KeyEvent.META_SHIFT_ON != 0) {
+        sendDownKeyEvent(eventTime, keyEventCode, metaState)
+        sendUpKeyEvent(eventTime, keyEventCode, metaState)
+        if (metaState.hasFlag(KeyEvent.META_SHIFT_ON)) {
             sendUpKeyEvent(eventTime, KeyEvent.KEYCODE_SHIFT_LEFT)
         }
-        if (metaState and KeyEvent.META_ALT_ON != 0) {
-            sendUpKeyEvent(eventTime, KeyEvent.KEYCODE_ALT_LEFT)
-        }
-        if (metaState and KeyEvent.META_CTRL_ON != 0) {
+        if (metaState.hasFlag(KeyEvent.META_CTRL_ON)) {
             sendUpKeyEvent(eventTime, KeyEvent.KEYCODE_CTRL_LEFT)
         }
-
-        if (metaState and KeyEvent.META_META_ON != 0) {
-            sendUpKeyEvent(eventTime, KeyEvent.KEYCODE_META_LEFT)
+        if (metaState.hasFlag(KeyEvent.META_ALT_ON)) {
+            sendUpKeyEvent(eventTime, KeyEvent.KEYCODE_ALT_LEFT)
         }
-
-        if (metaState and KeyEvent.META_SYM_ON != 0) {
-            sendUpKeyEvent(eventTime, KeyEvent.KEYCODE_SYM)
-        }
-
-        ic.endBatchEdit()
         return true
+    }
+
+    fun handleKey(
+        key: String,
+        keyCode: Int,
+    ) {
+        postRimeJob {
+            val value = if (key.isNotEmpty()) key.codePointAt(0) else RimeKeyMapping.keyCodeToVal(keyCode)
+            if (!processKey(value, 0u)) {
+                when (keyCode) {
+                    KeyEvent.KEYCODE_DEL -> {
+                        sendDownUpKeyEvent(KeyEvent.KEYCODE_DEL)
+                    }
+                    KeyEvent.KEYCODE_ENTER -> {
+                        handleReturnKey()
+                    }
+                    else -> {
+                        if (key.isNotEmpty()) {
+                            currentInputConnection?.commitText(key, 1)
+                        }
+                    }
+                }
+            }
+        }
     }
 
     private fun forwardKeyEvent(event: KeyEvent): Boolean {
         val modifiers = KeyModifiers.fromKeyEvent(event)
         val charCode = event.unicodeChar
         if (charCode > 0 && charCode != '\t'.code && charCode != '\n'.code) {
-            postRimeJob {
-                processKey(charCode, modifiers.modifiers)
-            }
-            return true
+            return rime.run { processKey(charCode, modifiers.modifiers) }
         }
         val keyVal = KeyValue.fromKeyEvent(event)
         if (keyVal.value != RimeKeyMapping.RimeKey_VoidSymbol) {
-            postRimeJob {
-                processKey(keyVal, modifiers)
-            }
-            return true
+            return rime.run { processKey(keyVal, modifiers) }
         }
         Timber.d("Skipped KeyEvent: $event")
         return false
