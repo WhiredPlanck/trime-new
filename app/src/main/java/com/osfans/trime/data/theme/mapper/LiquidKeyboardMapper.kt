@@ -21,6 +21,11 @@ import timber.log.Timber
 class LiquidKeyboardMapper(
     node: YamlMap,
 ) : Mapper<LiquidKeyboard>(node) {
+    companion object {
+        // Pre-compile regex for better performance - avoids repeated compilation
+        private val NEWLINE_REGEX = "\n+".toRegex()
+    }
+
     override fun map(): LiquidKeyboard {
         val keyBarNode = node.get<YamlMap>("fixed_key_bar")
         val keyBar = keyBarNode?.let {
@@ -64,7 +69,7 @@ class LiquidKeyboardMapper(
                             }
                         } else { // simple keyboard data
                             value
-                                .split("\n+".toRegex())
+                                .split(NEWLINE_REGEX)
                                 .filter { it.isNotEmpty() }
                                 .forEach { keys.add(LiquidKeyboard.KeyItem(it)) }
                         }
