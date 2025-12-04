@@ -19,7 +19,10 @@ private val dateTimeFormatThreadLocal = ThreadLocal.withInitial {
     SimpleDateFormat.getDateTimeInstance()
 }
 
-fun formatDateTime(timeMillis: Long? = null): String = dateTimeFormatThreadLocal.get()!!.format(timeMillis?.let { Date(it) } ?: Date())
+fun formatDateTime(timeMillis: Long? = null): String {
+    val formatter = dateTimeFormatThreadLocal.get() ?: SimpleDateFormat.getDateTimeInstance()
+    return formatter.format(timeMillis?.let { Date(it) } ?: Date())
+}
 
 // SimpleDateFormat is not thread-safe, so we use ThreadLocal to ensure each thread has its own instance
 private val iso8601DateFormatThreadLocal = ThreadLocal.withInitial {
@@ -28,7 +31,12 @@ private val iso8601DateFormatThreadLocal = ThreadLocal.withInitial {
     }
 }
 
-fun iso8601UTCDateTime(timeMillis: Long? = null): String = iso8601DateFormatThreadLocal.get()!!.format(timeMillis?.let { Date(it) } ?: Date())
+fun iso8601UTCDateTime(timeMillis: Long? = null): String {
+    val formatter = iso8601DateFormatThreadLocal.get() ?: SimpleDateFormat("yyyy-MM-dd'T'HH:mm:ss'Z'", Locale.US).apply {
+        timeZone = TimeZone.getTimeZone("UTC")
+    }
+    return formatter.format(timeMillis?.let { Date(it) } ?: Date())
+}
 
 fun customFormatTimeInDefault(
     pattern: String,
@@ -65,6 +73,8 @@ fun customFormatDateTime(
                 .format(cal)
         }
     } else {
+        // For API < N: Creating new SimpleDateFormat instances here since both locale and option vary.
+        // Caching would be complex and likely not worth it for older API levels.
         SimpleDateFormat(option, loc).format(date)
     }
 }
