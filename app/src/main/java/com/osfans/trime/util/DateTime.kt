@@ -14,20 +14,29 @@ import java.util.Date
 import java.util.Locale
 import java.util.TimeZone
 
-fun formatDateTime(timeMillis: Long? = null): String = SimpleDateFormat.getDateTimeInstance().format(timeMillis?.let { Date(it) } ?: Date())
+// SimpleDateFormat is not thread-safe, so we use ThreadLocal to ensure each thread has its own instance
+private val dateTimeFormatThreadLocal = ThreadLocal.withInitial {
+    SimpleDateFormat.getDateTimeInstance()
+}
 
-private val iso8601DateFormat by lazy {
+fun formatDateTime(timeMillis: Long? = null): String = dateTimeFormatThreadLocal.get()!!.format(timeMillis?.let { Date(it) } ?: Date())
+
+// SimpleDateFormat is not thread-safe, so we use ThreadLocal to ensure each thread has its own instance
+private val iso8601DateFormatThreadLocal = ThreadLocal.withInitial {
     SimpleDateFormat("yyyy-MM-dd'T'HH:mm:ss'Z'", Locale.US).apply {
         timeZone = TimeZone.getTimeZone("UTC")
     }
 }
 
-fun iso8601UTCDateTime(timeMillis: Long? = null): String = iso8601DateFormat.format(timeMillis?.let { Date(it) } ?: Date())
+fun iso8601UTCDateTime(timeMillis: Long? = null): String = iso8601DateFormatThreadLocal.get()!!.format(timeMillis?.let { Date(it) } ?: Date())
 
 fun customFormatTimeInDefault(
     pattern: String,
     timeMillis: Long? = null,
-): String = SimpleDateFormat(pattern, Locale.getDefault()).format(timeMillis?.let { Date(it) } ?: Date())
+): String {
+    // Create a new instance each time since pattern varies - still safe but not cached
+    return SimpleDateFormat(pattern, Locale.getDefault()).format(timeMillis?.let { Date(it) } ?: Date())
+}
 
 fun customFormatDateTime(
     pattern: String,

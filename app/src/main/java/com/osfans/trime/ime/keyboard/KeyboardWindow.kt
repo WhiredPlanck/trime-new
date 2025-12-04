@@ -29,7 +29,6 @@ import com.osfans.trime.ime.window.ResidentWindow
 import kotlinx.coroutines.channels.BufferOverflow
 import kotlinx.coroutines.flow.MutableSharedFlow
 import kotlinx.coroutines.flow.asSharedFlow
-import kotlinx.coroutines.runBlocking
 import me.tatarka.inject.annotations.Inject
 import splitties.views.dsl.core.add
 import splitties.views.dsl.core.frameLayout
@@ -123,7 +122,7 @@ class KeyboardWindow(
         }
 
         keyboard.also {
-            runBlocking { _currentKeyboardHeight.emit(it.keyboardHeight) }
+            _currentKeyboardHeight.tryEmit(it.keyboardHeight)
             if (it.isLock) lastLockKeyboardId = target
             dispatchCapsState(it::setShifted)
 
