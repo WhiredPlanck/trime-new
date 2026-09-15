@@ -16,6 +16,7 @@ import kotlin.properties.ReadOnlyProperty
 import kotlin.reflect.KProperty
 
 /** [鍵盤][Keyboard]中的各個按鍵，包含單擊、長按、滑動等多種[事件][KeyAction]  */
+@Suppress("ktlint:standard:mixed-condition-operators")
 class Key(
     private val parent: Keyboard,
     private val selfConfig: TextKeyboard.TextKey? = null,
@@ -274,6 +275,7 @@ class Key(
             keyAction == click &&
             !keyActions.containsKey(KeyBehavior.ASCII) &&
             !rime.run { statusCached }.let { it.isAsciiMode || it.isAsciiPunct } -> label
+
         else -> keyAction!!.getLabel(parent) // 中文狀態顯示標籤
     }
 
@@ -296,6 +298,7 @@ class Key(
 
     fun getBackgroundDrawable(): Drawable? = when (appearanceType) {
         2 -> if (isPressed) hlOnKeyBackground else onKeyBackground
+
         1 -> {
             if (isPressed) {
                 hlOffKeyBackground
@@ -304,6 +307,7 @@ class Key(
                     ?: offKeyBackground
             }
         }
+
         else -> if (isPressed) hlKeyBackground else keyBackground
     }
 
