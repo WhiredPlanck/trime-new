@@ -3,9 +3,6 @@
  * SPDX-License-Identifier: GPL-3.0-or-later
  */
 
-/**
- * Adapted from [fcitx5-android/DeviceInfo.kt](https://github.com/fcitx5-android/fcitx5-android/blob/e44c1c7/app/src/main/java/org/fcitx/fcitx5/android/utils/DeviceInfo.kt)
- */
 package com.osfans.trime.util
 
 import android.content.Context
@@ -13,7 +10,11 @@ import android.content.res.Configuration
 import android.os.Build
 import com.osfans.trime.BuildConfig
 
-// Adapted from https://gist.github.com/hendrawd/01f215fd332d84793e600e7f82fc154b
+/**
+ * Adapted from [fcitx5-android/DeviceInfo.kt](https://github.com/fcitx5-android/fcitx5-android/blob/e44c1c7/app/src/main/java/org/fcitx/fcitx5/android/utils/DeviceInfo.kt)
+ *
+ * Adapted from https://gist.github.com/hendrawd/01f215fd332d84793e600e7f82fc154b
+ **/
 object DeviceInfo {
     fun get(context: Context) = buildString {
         appendLine("--------- Device Info")

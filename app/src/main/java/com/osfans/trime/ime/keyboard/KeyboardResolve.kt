@@ -8,9 +8,7 @@ package com.osfans.trime.ime.keyboard
  * Pure resolvers for the keyboard geometry cascade (key -> keyboard config ->
  * theme style). The three legacy merge conventions are kept explicit so the
  * semantics stay testable without Android dependencies.
- */
-
-/**
+ *
  * Convention A: positive-wins for gaps and heights. A value > 0 overrides the
  * style default; 0 or null means "unset" and falls through to the style value
  * (which may itself be 0). [unit] converts the selected raw value exactly once.

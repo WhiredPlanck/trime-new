@@ -2,9 +2,6 @@
 //
 // SPDX-License-Identifier: GPL-3.0-or-later
 
-/**
- * Adapted from [fcitx5-android/Logcat.kt](https://github.com/fcitx5-android/fcitx5-android/blob/e44c1c7/app/src/main/java/org/fcitx/fcitx5/android/utils/Logcat.kt)
- */
 package com.osfans.trime.util
 
 import android.os.Process
@@ -19,6 +16,9 @@ import kotlinx.coroutines.flow.SharedFlow
 import kotlinx.coroutines.flow.asSharedFlow
 import kotlinx.coroutines.launch
 
+/**
+ * Adapted from [fcitx5-android/Logcat.kt](https://github.com/fcitx5-android/fcitx5-android/blob/e44c1c7/app/src/main/java/org/fcitx/fcitx5/android/utils/Logcat.kt)
+ */
 class Logcat(
     val pid: Int? = Process.myPid(),
 ) : CoroutineScope by CoroutineScope(Dispatchers.IO) {
