@@ -24,6 +24,6 @@ plugins {
 spotless {
     kotlin {
         target("**/*.kt", "**/*.kts")
-        ktlint("1.7.1")
+        ktlint("1.8.0")
     }
 }
