@@ -65,7 +65,9 @@ class LicenseFragment : PaddingPreferenceFragment() {
     ): Boolean {
         when (licenses.size) {
             0 -> {}
+
             1 -> showLicenseContent(licenses.first())
+
             else -> {
                 val licenseArray = licenses.toTypedArray()
                 val licenseNames = licenseArray.map { it.spdxId ?: it.name }.toTypedArray()

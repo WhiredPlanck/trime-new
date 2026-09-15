@@ -118,7 +118,9 @@ internal class ColorTable private constructor(
                 entries[key] =
                     when {
                         isImageValue(raw) -> Value.Image(raw)
+
                         parsed != null -> Value.Color(parsed)
+
                         else -> {
                             invalidValues += key
                             Value.None

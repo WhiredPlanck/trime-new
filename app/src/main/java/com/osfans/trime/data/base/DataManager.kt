@@ -102,6 +102,7 @@ object DataManager {
                     val destPath = sharedDataDir.resolveSibling(it.path).absolutePath
                     ResourceUtils.copyFile(it.path, destPath)
                 }
+
                 is DataDiff.DeleteDir,
                 is DataDiff.DeleteFile,
                 -> FileUtils.delete(sharedDataDir.resolve(it.path.substringAfterLast('/'))).getOrThrow()

@@ -43,12 +43,14 @@ fun buildIntentFromAction(
     Intent.ACTION_WEB_SEARCH, Intent.ACTION_SEARCH -> {
         buildIntentFromArgument(argument)
     }
+
     Intent.ACTION_SEND -> {
         Intent(fullAction).apply {
             type = "text/plain"
             putExtra(Intent.EXTRA_TEXT, argument)
         }
     }
+
     else -> Intent(fullAction, Uri.parse(argument))
 }
 

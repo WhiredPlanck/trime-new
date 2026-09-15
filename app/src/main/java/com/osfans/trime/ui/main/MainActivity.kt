@@ -158,6 +158,7 @@ class MainActivity : AppCompatActivity() {
             Intent.ACTION_MAIN -> if (SetupActivity.shouldShowUp()) {
                 startActivity<SetupActivity>()
             }
+
             Intent.ACTION_RUN -> {
                 val route = intent.parcelable<NavigationRoute>(EXTRA_SETTINGS_ROUTE) ?: return
                 navController.popBackStack(NavigationRoute.Main, false)

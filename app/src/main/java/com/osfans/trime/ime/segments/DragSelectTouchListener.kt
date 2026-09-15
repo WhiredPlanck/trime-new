@@ -46,6 +46,7 @@ class DragSelectTouchListener(
                     return false
                 }
             }
+
             MotionEvent.ACTION_MOVE -> {
                 if (startPosition == -1) return false
 
@@ -76,6 +77,7 @@ class DragSelectTouchListener(
                     }
                 }
             }
+
             MotionEvent.ACTION_UP, MotionEvent.ACTION_CANCEL -> {
                 startPosition = -1
                 isDragSelecting = false
@@ -105,6 +107,7 @@ class DragSelectTouchListener(
                     lastEndPosition = position
                 }
             }
+
             MotionEvent.ACTION_UP, MotionEvent.ACTION_CANCEL -> {
                 isDragSelecting = false
                 startPosition = -1

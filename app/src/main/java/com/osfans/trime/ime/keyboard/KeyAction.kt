@@ -54,9 +54,15 @@ class KeyAction(
     val isShiftLock: Boolean
         get() =
             when (shiftLock) {
-                "long" -> false // 长按锁定
-                "click" -> true // 点击锁定
-                "ascii_long" -> !rime.run { statusCached }.isAsciiMode // 英文长按锁定，中文点击锁定
+                "long" -> false
+
+                // 长按锁定
+                "click" -> true
+
+                // 点击锁定
+                "ascii_long" -> !rime.run { statusCached }.isAsciiMode
+
+                // 英文长按锁定，中文点击锁定
                 else -> false
             }
 
@@ -222,6 +228,7 @@ class KeyAction(
                 }
                 this.label = label
             }
+
             // match: { x: { commit: a, text: b, label: c } }
             is KeyActionToken.Inline -> {
                 commit = token.token.commit ?: ""

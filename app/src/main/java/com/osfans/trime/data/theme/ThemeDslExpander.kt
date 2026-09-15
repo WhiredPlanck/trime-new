@@ -75,10 +75,12 @@ object ThemeDslExpander {
             root: Node,
         ): Node = when (node) {
             is Node.Scalar, is Node.Alias -> node
+
             is Node.Sequence ->
                 expanded.getOrPut(node) {
                     Node.Sequence(node.nodes.map { expandNode(it, resourceId, root) }, node.anchor)
                 }
+
             is Node.Mapping -> expanded.getOrPut(node) { expandMapping(node, resourceId, root) }
         }
 
@@ -118,6 +120,7 @@ object ThemeDslExpander {
         ): Node {
             val patchMap = when (patch) {
                 is Node.Mapping -> patch
+
                 is Node.Scalar -> {
                     // A reference, usually `__patch: <id>.custom:/patch?`; absent means
                     // "no such patch", which librime tolerates for optional references.
@@ -125,6 +128,7 @@ object ThemeDslExpander {
                     target as? Node.Mapping
                         ?: throw UnsupportedDsl("'$PATCH' target is not a mapping")
                 }
+
                 else -> throw UnsupportedDsl("unsupported '$PATCH' value")
             }
             val baseMap = base as? Node.Mapping
@@ -149,12 +153,14 @@ object ThemeDslExpander {
                 val existing = merged[key]
                 merged[key] = when {
                     existing is Node.Mapping && value is Node.Mapping -> mergeMaps(existing, value)
+
                     // librime cannot merge a tree into a node of another type and fails
                     // the whole include; refuse it so the deployed path decides.
                     value is Node.Mapping && existing != null && existing !is Node.Mapping ->
                         throw UnsupportedDsl(
                             "cannot merge a mapping into the non-mapping sibling key '${key.string}'",
                         )
+
                     else -> value
                 }
             }

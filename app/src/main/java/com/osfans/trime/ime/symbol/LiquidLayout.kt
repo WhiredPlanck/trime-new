@@ -98,6 +98,7 @@ class LiquidLayout(
                             )
                         }
                     }
+
                     LiquidKeyboard.KeyBar.Position.TOP,
                     LiquidKeyboard.KeyBar.Position.BOTTOM,
                     -> {
@@ -158,6 +159,7 @@ class LiquidLayout(
                     },
                 )
             }
+
             LiquidKeyboard.KeyBar.Position.BOTTOM -> {
                 add(
                     root,
@@ -176,6 +178,7 @@ class LiquidLayout(
                     },
                 )
             }
+
             LiquidKeyboard.KeyBar.Position.LEFT -> {
                 add(
                     root,
@@ -194,6 +197,7 @@ class LiquidLayout(
                     },
                 )
             }
+
             LiquidKeyboard.KeyBar.Position.RIGHT -> {
                 add(
                     root,

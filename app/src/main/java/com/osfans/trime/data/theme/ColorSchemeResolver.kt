@@ -50,12 +50,15 @@ internal object ColorSchemeResolver {
                         // Both are set: pick by the current mode.
                         scheme(if (isNightMode) darkSchemeId else lightSchemeId)
                             ?: linkedScheme(defaultScheme)
+
                     lightSchemeId != null ->
                         // Light scheme only: this is a dark scheme.
                         if (isNightMode) selected else scheme(lightSchemeId) ?: linkedScheme(defaultScheme)
+
                     darkSchemeId != null ->
                         // Dark scheme only: this is a light scheme.
                         if (isNightMode) scheme(darkSchemeId) ?: linkedScheme(defaultScheme) else selected
+
                     else -> linkedScheme(defaultScheme)
                 }
             }

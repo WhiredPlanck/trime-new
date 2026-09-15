@@ -64,10 +64,12 @@ object RimeDataSync {
         val exportOk =
             when {
                 !usesExternalSync(context) -> true
+
                 !hasExternalAccess(context) -> {
                     Timber.w("Export skipped: no data path selected")
                     false
                 }
+
                 else -> exportToExternal(context).isSuccess
             }
         return exportOk

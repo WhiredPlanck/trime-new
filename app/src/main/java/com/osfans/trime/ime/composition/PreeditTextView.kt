@@ -39,12 +39,14 @@ constructor(
                 newCursorPos = bytes.size
                 return true
             }
+
             MotionEvent.ACTION_UP -> {
                 onMoveCursor?.invoke(newCursorPos)
                 lastTapOffset = -1
                 newCursorPos = -1
                 return true
             }
+
             MotionEvent.ACTION_CANCEL -> {
                 lastTapOffset = -1
                 newCursorPos = -1

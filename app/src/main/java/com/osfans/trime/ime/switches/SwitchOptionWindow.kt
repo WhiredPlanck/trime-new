@@ -112,19 +112,23 @@ class SwitchOptionWindow(di: DI) :
                                 }
                             }
                         }
+
                         SwitchOptionEntry.Static.Type.UpdateConfig -> rime.launchOnReady { r ->
                             r.updateConfig()
                             service.lifecycleScope.launch {
                                 Toast.makeText(service, R.string.done, Toast.LENGTH_SHORT).show()
                             }
                         }
+
                         SwitchOptionEntry.Static.Type.Keyboard -> AppUtils.launchMainToKeyboard(context)
+
                         SwitchOptionEntry.Static.Type.ThemeList -> showDialog { r ->
                             ThemePickerDialog.build(service.lifecycleScope, context) {
                                 r.commitComposition()
                             }
                         }
                     }
+
                     is SwitchOptionEntry.Custom -> {
                         val options = entry.switch.options
                         if (options.isEmpty()) {

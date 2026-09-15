@@ -90,6 +90,7 @@ object ThemeManager {
                     Timber.w("Theme '$id' is unavailable, fallback to default theme 'trime'")
                     return ResolvedTheme("trime", result.theme, result.findings)
                 }
+
                 is ThemeLoader.ThemeLoadResult.Failure -> Timber.w(result.error)
             }
         }
@@ -101,6 +102,7 @@ object ThemeManager {
                     Timber.w("Theme '$id' is unavailable, fallback to available theme '$fallbackId'")
                     return ResolvedTheme(fallbackId, result.theme, result.findings)
                 }
+
                 is ThemeLoader.ThemeLoadResult.Failure -> lastFailure = result.error
             }
         }

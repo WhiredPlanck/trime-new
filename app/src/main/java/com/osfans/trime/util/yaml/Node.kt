@@ -145,7 +145,9 @@ inline fun <reified T : Enum<T>> Node.enum(): T? {
 
 operator fun Node.get(node: Node): Node? = when (this) {
     is Node.Scalar, is Node.Alias -> null
+
     is Node.Mapping -> this[node]
+
     is Node.Sequence -> {
         val index = node.int
         if (index != null && index in this.indices) {

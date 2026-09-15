@@ -39,6 +39,7 @@ object OrphanCleaner {
                     }
                 when {
                     file.isFile && SyncPathPolicy.shouldPreserveLocal(relative, ownId, syncDir) -> Unit
+
                     file.isFile && relative !in externalPaths -> {
                         val deleteResult = FileUtils.delete(file)
                         if (deleteResult.isSuccess) {
@@ -49,6 +50,7 @@ object OrphanCleaner {
                             Timber.w(deleteResult.exceptionOrNull(), "Failed to delete orphan $relative")
                         }
                     }
+
                     file.isDirectory && file.list()?.isEmpty() == true -> {
                         if (file.delete()) {
                             deleted++

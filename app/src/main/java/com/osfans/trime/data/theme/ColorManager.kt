@@ -250,6 +250,7 @@ object ColorManager {
                     }
                 }
             }
+
         else -> drawable?.also { it.alpha = MathUtils.clamp(alpha, 0, 255) }
     }
 

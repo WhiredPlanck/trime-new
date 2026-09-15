@@ -184,11 +184,13 @@ constructor(
                     textScaleY = 1.0f
                     translateX = calculateTranslateX(contentWidth, textWidth, 1.0f, shouldAlignLeft)
                 }
+
                 Mode.Horizontal -> {
                     textScaleX = contentWidth.toFloat() / textWidth.toFloat()
                     textScaleY = 1.0f
                     translateX = calculateTranslateX(contentWidth, textWidth, textScaleX, shouldAlignLeft)
                 }
+
                 Mode.Proportional -> {
                     val textXScale = contentWidth.toFloat() / textWidth.toFloat()
                     val textYScale = contentHeight.toFloat() / textHeight.toFloat()

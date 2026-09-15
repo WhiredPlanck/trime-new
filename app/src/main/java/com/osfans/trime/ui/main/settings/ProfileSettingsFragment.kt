@@ -274,8 +274,10 @@ class ProfileSettingsFragment : PaddingPreferenceFragment() {
                                 ctx.toast(
                                     when {
                                         !success -> R.string.sync_user_data_failure
+
                                         RimeDataSync.usesExternalSync(ctx) ->
                                             R.string.sync_user_data_success_external
+
                                         else -> R.string.sync_user_data_success
                                     },
                                 )

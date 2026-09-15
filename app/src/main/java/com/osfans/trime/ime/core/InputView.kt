@@ -347,6 +347,7 @@ class InputView(
                     }
                 }
             }
+
             is RimeMessage.CompositionMessage -> {
                 val data = if (candidatesMode == PopupCandidatesMode.ALWAYS_SHOW) {
                     CompositionProto()
@@ -355,9 +356,11 @@ class InputView(
                 }
                 broadcaster.onCompositionUpdate(data)
             }
+
             is RimeMessage.BulkCandidatesMessage -> {
                 broadcaster.onCandidateListUpdate(it.data)
             }
+
             else -> {}
         }
         broadcastKeyAppearanceUpdate()

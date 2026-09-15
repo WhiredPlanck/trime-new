@@ -124,10 +124,12 @@ class CommonKeyboardActionListener(override val di: DI) : DIAware {
                         service.commitText(action.commit)
                         false
                     }
+
                     text.isNotEmpty() -> {
                         onText(text)
                         false
                     }
+
                     else -> true
                 }
 
@@ -261,10 +263,12 @@ class CommonKeyboardActionListener(override val di: DI) : DIAware {
                         Timber.i("try to start maintenance via command ...")
                         rime.launchOnReady { api -> api.deploy() }
                     }
+
                     "SYNC_USER_DATA" -> {
                         Timber.i("try to sync rime user data via command ...")
                         rime.launchOnReady { api -> api.syncUserData() }
                     }
+
                     "UPDATE_CONFIG" -> {
                         Timber.i("try to update rime config via command ...")
                         rime.launchOnReady { api ->
@@ -274,6 +278,7 @@ class CommonKeyboardActionListener(override val di: DI) : DIAware {
                             }
                         }
                     }
+
                     else -> Timber.w("Unknown apply method: $arg")
                 }
             }
@@ -349,8 +354,10 @@ class CommonKeyboardActionListener(override val di: DI) : DIAware {
 
                 val modifier = when {
                     action.modifier == 0 -> KeyboardWindow.currentKeyboard.modifier
+
                     (action.modifier and KeyEvent.META_CTRL_ON) != 0 && isNavigationKey(action.code) ->
                         action.modifier or KeyboardWindow.currentKeyboard.modifier
+
                     else -> action.modifier
                 }
 

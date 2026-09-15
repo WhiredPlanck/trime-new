@@ -112,10 +112,12 @@ class KeyView(
                         val actionBehavior = if (pressedIdx != -1 && pressedIdx != id) KeyBehavior.COMBO else behavior
                         key.getAction(actionBehavior)?.let { processKeyAction(it, actionBehavior) }
                     }
+
                     KeyBehavior.DOUBLE_CLICK, KeyBehavior.LAZY_DOUBLE_CLICK,
                     KeyBehavior.SWIPE_UP, KeyBehavior.SWIPE_DOWN, KeyBehavior.SWIPE_LEFT, KeyBehavior.SWIPE_RIGHT,
                     ->
                         key.getAction(behavior)?.let { processKeyAction(it, behavior) }
+
                     else -> {}
                 }
 

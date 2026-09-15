@@ -25,10 +25,12 @@ class RimeIntentReceiver : BroadcastReceiver() {
                 Timber.i("try to start maintenance ...")
                 rime.launchOnReady { it.deploy() }
             }
+
             ACTION_SYNC_USER_DATA -> {
                 Timber.i("try to sync rime user data ...")
                 rime.launchOnReady { it.syncUserData() }
             }
+
             else -> {}
         }
     }

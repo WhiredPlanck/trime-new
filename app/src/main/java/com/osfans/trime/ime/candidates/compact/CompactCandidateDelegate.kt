@@ -184,6 +184,7 @@ class CompactCandidateDelegate(override val di: DI) :
                 layoutFlexGrow = 0f
                 secondLayoutPassNeeded = false
             }
+
             CompactCandidateMode.AUTO_FILL -> {
                 layoutMinWidth = view.width / maxSpanCount - separatorDrawable.intrinsicWidth
                 layoutFlexGrow = if (candidates.size < maxSpanCount) 0f else 1f
@@ -191,6 +192,7 @@ class CompactCandidateDelegate(override val di: DI) :
                 secondLayoutPassNeeded = candidates.size < maxSpanCount
                 secondLayoutPassDone = false
             }
+
             CompactCandidateMode.ALWAYS_FILL -> {
                 layoutMinWidth = 0
                 layoutFlexGrow = 1f

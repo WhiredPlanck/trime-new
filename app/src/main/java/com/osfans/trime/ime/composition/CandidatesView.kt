@@ -114,10 +114,12 @@ class CandidatesView(
                 composition = it.data
                 updateUi()
             }
+
             is RimeMessage.PagedCandidatesMessage -> {
                 candidates = it.data
                 updateUi()
             }
+
             else -> {}
         }
     }
@@ -185,18 +187,22 @@ class CandidatesView(
                 tX = maxX
                 tY = minY
             }
+
             PopupPosition.TOP_LEFT -> {
                 tX = minX
                 tY = minY
             }
+
             PopupPosition.BOTTOM_RIGHT -> {
                 tX = maxX
                 tY = maxY
             }
+
             PopupPosition.BOTTOM_LEFT -> {
                 tX = minX
                 tY = maxY
             }
+
             PopupPosition.FOLLOW -> {
                 tX =
                     if (layoutDirection == LAYOUT_DIRECTION_RTL) {

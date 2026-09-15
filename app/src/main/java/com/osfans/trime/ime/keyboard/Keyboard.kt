@@ -295,7 +295,9 @@ class Keyboard(
                             leftKey.extraWidthRight += spacerWidth / 2
                             rightKey.extraWidthLeft += spacerWidth - spacerWidth / 2
                         }
+
                         leftKey != null -> leftKey.extraWidthRight += spacerWidth
+
                         rightKey != null -> rightKey.extraWidthLeft += spacerWidth
                     }
                 }
@@ -322,15 +324,19 @@ class Keyboard(
             KeyEvent.KEYCODE_SHIFT_LEFT, KeyEvent.KEYCODE_SHIFT_RIGHT -> {
                 mShiftKey = key
             }
+
             KeyEvent.KEYCODE_CTRL_LEFT, KeyEvent.KEYCODE_CTRL_RIGHT -> {
                 mCtrlKey = key
             }
+
             KeyEvent.KEYCODE_META_LEFT, KeyEvent.KEYCODE_META_RIGHT -> {
                 mMetaKey = key
             }
+
             KeyEvent.KEYCODE_ALT_LEFT, KeyEvent.KEYCODE_ALT_RIGHT -> {
                 mAltKey = key
             }
+
             KeyEvent.KEYCODE_SYM -> {
                 mSymKey = key
             }

@@ -19,8 +19,10 @@ class RimeSchema(val schemaId: String) {
     init {
         val schemaConfig = when {
             schemaId.isEmpty() -> RimeConfig.openConfig("default")
+
             schemaId.startsWith('.') ->
                 RimeConfig.openSchema(schemaId.substring(1))
+
             else -> RimeConfig.openSchema(schemaId)
         }
         schemaConfig.use {

@@ -79,6 +79,7 @@ class Parser(reader: Reader, codePointLimit: Int? = null) {
                     anchor?.let { aliases[it] = node }
                     return node
                 }
+
                 else -> {
                     val node = readNode()
                     items += node
@@ -99,6 +100,7 @@ class Parser(reader: Reader, codePointLimit: Int? = null) {
                     anchor?.let { aliases[it] = node }
                     return node
                 }
+
                 else -> {
                     val key = readNode()
                     val value = readNode()
@@ -113,10 +115,12 @@ class Parser(reader: Reader, codePointLimit: Int? = null) {
 
         return when (mergeEntries.count()) {
             0 -> items
+
             1 -> when (val mappingsToMerge = mergeEntries.single().value) {
                 is Node.Sequence -> doMerges(items, mappingsToMerge.nodes)
                 else -> doMerges(items, listOf(mappingsToMerge))
             }
+
             else -> throw IllegalArgumentException("Cannot perform multiple '<<' merges into a map. Instead, combine all merges into a single '<<' entry.")
         }
     }
@@ -134,8 +138,11 @@ class Parser(reader: Reader, codePointLimit: Int? = null) {
             .forEach { other ->
                 when (other) {
                     is Node.Scalar -> throw IllegalArgumentException("Cannot merge a scalar value into a map.")
+
                     is Node.Sequence -> throw IllegalArgumentException("Cannot merge a sequence value into a map.")
+
                     is Node.Alias -> throw IllegalArgumentException("Cannot merge a alias value into a map.")
+
                     is Node.Mapping ->
                         other.entries.forEach { (key, value) ->
                             val existingEntry = merged.entries.singleOrNull { key is Node.Scalar && it.key is Node.Scalar && (it.key as Node.Scalar).string == key.string }
@@ -205,6 +212,7 @@ class Parser(reader: Reader, codePointLimit: Int? = null) {
         "expected <block end>, but found '<block mapping start>'",
         ->
             "$message (is the indentation level of this line or a line nearby incorrect?)"
+
         else -> message
     }
 

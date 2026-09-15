@@ -163,9 +163,11 @@ object RimeDaemon {
                     DeployNotification.showProgress()
                     withContext(Dispatchers.IO) { subprocess("logcat", "--clear") }
                 }
+
                 RimeMessage.DeployMessage.State.Success -> {
                     DeployNotification.showSuccess()
                 }
+
                 RimeMessage.DeployMessage.State.Failure -> {
                     val intent =
                         Intent(appContext, LogActivity::class.java).apply {

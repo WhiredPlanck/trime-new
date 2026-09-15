@@ -120,7 +120,9 @@ class TransitionEventBuilder<State : Any, B : EventStateMachine.BooleanStateKey>
             val filtered = builders.filter { it.source == currentState && it.pred(useBoolean) }
             return when (filtered.size) {
                 0 -> currentState
+
                 1 -> filtered[0].target
+
                 else -> {
                     val first = filtered[0].target
                     first

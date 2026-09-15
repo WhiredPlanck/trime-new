@@ -25,9 +25,11 @@ class FlexboxVerticalDecoration(
             View.LAYOUT_DIRECTION_LTR -> {
                 outRect.right = drawable.intrinsicWidth
             }
+
             View.LAYOUT_DIRECTION_RTL -> {
                 outRect.left = drawable.intrinsicWidth
             }
+
             else -> {
                 // should not reach here
                 outRect.set(0, 0, 0, 0)
@@ -51,10 +53,12 @@ class FlexboxVerticalDecoration(
                     left = view.right + lp.rightMargin
                     right = left + drawable.intrinsicWidth
                 }
+
                 View.LAYOUT_DIRECTION_RTL -> {
                     right = view.left + lp.leftMargin
                     left = right - drawable.intrinsicWidth
                 }
+
                 else -> {
                     // should not reach here
                     left = view.left

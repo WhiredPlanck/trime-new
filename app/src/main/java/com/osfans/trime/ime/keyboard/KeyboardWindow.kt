@@ -212,9 +212,15 @@ class KeyboardWindow(di: DI) :
         val alphabet = rime.run { schemaCached }.alphabet
         val layout =
             when {
-                alphabet.all { it.isLetter() } -> "qwerty" // 包含 26 个字母
-                alphabet.all { it.isLetter() || ",./;".any(it::equals) } -> "qwerty_" // 包含 26 个字母和,./;
-                alphabet.all { it.isLetterOrDigit() } -> "qwerty0" // 包含 26 个字母和数字键
+                alphabet.all { it.isLetter() } -> "qwerty"
+
+                // 包含 26 个字母
+                alphabet.all { it.isLetter() || ",./;".any(it::equals) } -> "qwerty_"
+
+                // 包含 26 个字母和,./;
+                alphabet.all { it.isLetterOrDigit() } -> "qwerty0"
+
+                // 包含 26 个字母和数字键
                 else -> "default"
             }
         return if (presetKeyboardIds.contains(layout)) layout else "default"
@@ -225,10 +231,15 @@ class KeyboardWindow(di: DI) :
         val dot =
             when (id) {
                 ".default" -> smartMatchKeyboard()
+
                 ".prior" -> presetKeyboardIds.getOrNull(currentIdx - 1) ?: currentKeyboardId
+
                 ".next" -> presetKeyboardIds.getOrNull(currentIdx + 1) ?: currentKeyboardId
+
                 ".last" -> lastKeyboardId
+
                 ".last_lock" -> lastLockKeyboardId
+
                 ".ascii" -> {
                     var ascii = activeKeyboard?.asciiKeyboard
                     if (ascii.isNullOrEmpty()) {
@@ -236,6 +247,7 @@ class KeyboardWindow(di: DI) :
                     }
                     if (presetKeyboardIds.contains(ascii)) ascii else currentKeyboardId
                 }
+
                 else -> {
                     id.ifEmpty {
                         if (activeKeyboard?.isLock == true) currentKeyboardId else lastLockKeyboardId
@@ -285,12 +297,14 @@ class KeyboardWindow(di: DI) :
         val targetKeyboard =
             when (info.imeOptions and EditorInfo.IME_FLAG_FORCE_ASCII) {
                 EditorInfo.IME_FLAG_FORCE_ASCII -> ".ascii"
+
                 else -> {
                     when (info.inputType and InputType.TYPE_MASK_CLASS) {
                         InputType.TYPE_CLASS_NUMBER,
                         InputType.TYPE_CLASS_PHONE,
                         InputType.TYPE_CLASS_DATETIME,
                         -> "number"
+
                         InputType.TYPE_CLASS_TEXT -> {
                             when (info.inputType and InputType.TYPE_MASK_VARIATION) {
                                 InputType.TYPE_TEXT_VARIATION_EMAIL_ADDRESS,
@@ -299,9 +313,11 @@ class KeyboardWindow(di: DI) :
                                 InputType.TYPE_TEXT_VARIATION_WEB_EMAIL_ADDRESS,
                                 InputType.TYPE_TEXT_VARIATION_WEB_PASSWORD,
                                 -> ".ascii"
+
                                 else -> ""
                             }
                         }
+
                         else -> ""
                     }
                 }
@@ -370,6 +386,7 @@ class KeyboardWindow(di: DI) :
                     switchKeyboard(target)
                 }
             }
+
             option.startsWith("_key_") -> {
                 val what = option.removePrefix("_key_")
                 if (what.isNotEmpty() && value.value) {

@@ -119,7 +119,9 @@ object ThemeDiagnostics {
         when {
             findings == null ->
                 appendLine("Static checks could not run for this theme.")
+
             findings.isEmpty() -> appendLine("No findings.")
+
             else -> {
                 val warnings = findings.count { it.severity == Severity.WARNING }
                 appendLine("Findings: ${findings.size} ($warnings warnings, ${findings.size - warnings} info)")

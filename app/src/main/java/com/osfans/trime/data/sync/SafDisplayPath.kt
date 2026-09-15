@@ -16,6 +16,7 @@ object SafDisplayPath {
         val absolutePath =
             when {
                 documentId.startsWith("raw:") -> documentId.removePrefix("raw:")
+
                 documentId.contains(':') -> {
                     val (volumeId, relativePath) = documentId.split(':', limit = 2)
                     when (volumeId) {
@@ -23,6 +24,7 @@ object SafDisplayPath {
                         else -> "/storage/$volumeId/$relativePath"
                     }
                 }
+
                 else -> return null
             }
         return stripEmulatedStoragePrefix(absolutePath)

@@ -44,6 +44,7 @@ class EnterKeyDisplayDelegate(override val di: DI) : DIAware {
                 Mode.ACTION_LABEL_ONLY -> {
                     return actionLabel.toString()
                 }
+
                 Mode.ACTION_LABEL_PREFERRED -> {
                     return if (!actionLabel.isNullOrEmpty()) {
                         actionLabel.toString()
@@ -51,16 +52,23 @@ class EnterKeyDisplayDelegate(override val di: DI) : DIAware {
                         theme.generalStyle.enterLabel.default
                     }
                 }
+
                 Mode.CUSTOM_PREFERRED,
                 Mode.ACTION_LABEL_NEVER,
                 -> {
                     return when (action) {
                         EditorInfo.IME_ACTION_DONE -> theme.generalStyle.enterLabel.done
+
                         EditorInfo.IME_ACTION_GO -> theme.generalStyle.enterLabel.go
+
                         EditorInfo.IME_ACTION_NEXT -> theme.generalStyle.enterLabel.next
+
                         EditorInfo.IME_ACTION_PREVIOUS -> theme.generalStyle.enterLabel.pre
+
                         EditorInfo.IME_ACTION_SEARCH -> theme.generalStyle.enterLabel.search
+
                         EditorInfo.IME_ACTION_SEND -> theme.generalStyle.enterLabel.send
+
                         else -> {
                             if (mode == Mode.ACTION_LABEL_NEVER) {
                                 theme.generalStyle.enterLabel.default

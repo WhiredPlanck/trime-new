@@ -193,10 +193,12 @@ class InputBarDelegate(override val di: DI) :
                     setUnrollButtonToAttach()
                     setUnrollButtonEnabled(true)
                 }
+
                 UnrollButtonStateMachine.State.ClickToDetachWindow -> {
                     setUnrollButtonToDetach()
                     setUnrollButtonEnabled(true)
                 }
+
                 UnrollButtonStateMachine.State.Hidden -> {
                     setUnrollButtonEnabled(false)
                 }

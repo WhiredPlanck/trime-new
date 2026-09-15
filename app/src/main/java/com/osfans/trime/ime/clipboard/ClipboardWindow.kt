@@ -175,6 +175,7 @@ class ClipboardWindow(di: DI, private val initialTab: Int = 0) : BoardWindow.Bar
                     0 -> promptDeleteAll {
                         ClipboardHelper.deleteAll(ClipboardHelper.haveUnpinned())
                     }
+
                     else -> promptDeleteAll {
                         CollectionHelper.deleteAll(CollectionHelper.haveUnpinned())
                     }

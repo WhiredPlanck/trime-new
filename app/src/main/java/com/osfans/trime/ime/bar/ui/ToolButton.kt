@@ -192,6 +192,7 @@ class ToolButton(context: Context, private val scope: ThemeScope) : GestureFrame
                 setColor(color)
                 cornerRadius = dp(bg.cornerRadius)
             }
+
             ToolBar.Button.Background.Type.CIRCLE -> ShapeDrawable(OvalShape()).apply { paint.color = color }
         }.let {
             val vInset = dp(bg.verticalInset)

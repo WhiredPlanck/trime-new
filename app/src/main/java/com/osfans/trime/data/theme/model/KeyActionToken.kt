@@ -25,6 +25,7 @@ sealed class KeyActionToken : Parcelable {
     companion object {
         fun decode(node: Node?): KeyActionToken? = when (node) {
             is Node.Scalar -> Plain(node.string)
+
             is Node.Mapping -> Inline(
                 Inline.Token(
                     commit = node["commit"]?.string,
@@ -32,6 +33,7 @@ sealed class KeyActionToken : Parcelable {
                     label = node["label"]?.string,
                 ),
             )
+
             else -> null
         }
     }

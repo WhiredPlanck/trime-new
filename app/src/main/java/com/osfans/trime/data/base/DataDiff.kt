@@ -47,8 +47,10 @@ sealed interface DataDiff {
                 .mapNotNull { (path, sha256) ->
                     when {
                         path !in old.files && sha256.isNotBlank() -> CreateFile(path)
+
                         old.files[path] != sha256 ->
                             if (sha256.isNotBlank()) UpdateFile(path) else null
+
                         else -> null
                     }
                 }.toMutableList()
