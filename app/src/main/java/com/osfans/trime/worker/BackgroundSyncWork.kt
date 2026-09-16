@@ -44,7 +44,7 @@ class BackgroundSyncWork(
         }
         if (!RimeDataSync.isStorageAvailable(applicationContext)) {
             Timber.w("Background sync skipped: storage not available")
-            return Result.failure()
+            return Result.retry()
         }
         val rime = RimeDaemon.createSession(javaClass.name)
         try {

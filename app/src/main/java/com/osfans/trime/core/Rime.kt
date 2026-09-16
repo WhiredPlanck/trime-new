@@ -451,18 +451,25 @@ class Rime :
         }
     }
 
-    fun startup() {
+    /**
+     * Start the native Rime dispatcher when storage is ready and the lifecycle is stopped.
+     *
+     * @return true when startup was accepted; false when storage is unavailable or the
+     * lifecycle was not stopped.
+     */
+    fun startup(): Boolean {
         if (!RimeDataSync.isStorageAvailable(appContext)) {
             Timber.w("Skip starting rime: storage not available!")
-            return
+            return false
         }
         if (lifecycle.currentState != RimeLifecycle.State.STOPPED) {
             Timber.w("Skip starting rime: not at stopped state!")
-            return
+            return false
         }
         registerRimeMessageHandler(::handleRimeMessage)
         lifecycleRegistry.emitEvent(RimeLifecycle.Event.ON_START)
         dispatcher.start()
+        return true
     }
 
     fun finalize() {
