@@ -45,10 +45,32 @@ object RimeDataSync {
         }
     }
 
-    fun isRuntimeReady(): Boolean = DataManager.userDataDir.canWrite() && DataManager.sharedDataDir.canWrite()
+    fun isRuntimeReady(): Boolean = DataManager.resolvedUserDataDir() != null && DataManager.resolvedSharedDataDir() != null
 
     fun usesExternalSync(context: Context = appContext): Boolean = AppPrefs.defaultInstance().profile.dataStorageMode.getValue() ==
         DataStorageMode.EXTERNAL_SYNC
+
+    /**
+     * Whether the user finished the storage-mode setup step.
+     *
+     * This does not require runtime dirs under [Context.getExternalFilesDir]
+     * to be writable yet, so late media after reboot does not reopen the setup wizard.
+     */
+    internal fun isStorageChoiceComplete(
+        mode: DataStorageMode,
+        treeUri: String,
+    ): Boolean = when (mode) {
+        DataStorageMode.APP_STORAGE -> true
+        DataStorageMode.EXTERNAL_SYNC -> treeUri.isNotEmpty()
+    }
+
+    fun isStorageChoiceDone(context: Context = appContext): Boolean {
+        val profile = AppPrefs.defaultInstance().profile
+        return isStorageChoiceComplete(
+            profile.dataStorageMode.getValue(),
+            profile.externalRimeTreeUri.getValue(),
+        )
+    }
 
     fun isStorageAvailable(context: Context = appContext): Boolean = isRuntimeReady() && (!usesExternalSync(context) || hasExternalAccess(context))
 

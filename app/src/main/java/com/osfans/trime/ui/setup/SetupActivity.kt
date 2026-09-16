@@ -56,6 +56,7 @@ class SetupActivity : FragmentActivity() {
                         RimeDataSync.importToLocal(this@SetupActivity).getOrThrow()
                     }
                     refreshCurrentFragment()
+                    updateButtons()
                     toast(R.string.setup__data_path_imported)
                     skipButton.visibility = View.VISIBLE
                 }.onFailure {
@@ -63,6 +64,7 @@ class SetupActivity : FragmentActivity() {
                         RimeDataSync.clearExternalTree(this@SetupActivity)
                     }
                     refreshCurrentFragment()
+                    updateButtons()
                     toast(R.string.setup__data_path_import_failed)
                 }
             }

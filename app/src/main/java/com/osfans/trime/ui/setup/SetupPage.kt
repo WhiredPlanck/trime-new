@@ -56,7 +56,7 @@ enum class SetupPage {
     }
 
     fun isDone() = when (this) {
-        Mode -> RimeDataSync.isStorageAvailable(appContext)
+        Mode -> RimeDataSync.isStorageChoiceDone(appContext)
         Enable -> InputMethodUtils.checkIsTrimeEnabled()
         Select -> InputMethodUtils.checkIsTrimeSelected()
     }
